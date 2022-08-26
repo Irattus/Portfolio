@@ -2,16 +2,26 @@
 
 AccountWidget::AccountWidget(QWidget *parent) :
     QGroupBox(parent),
-    m_dialog(new TransactionDialog(this)),
+    m_dialogTransaction(new TransactionDialog(this)),
+    m_dialogAccount(new AccountDialog(this)),
     m_menu(new QMenu(this)),
-    m_addTransAction(new QAction("Add Transaction",m_menu))
+    m_addTransAction(new QAction("Add Transaction",m_menu)),
+    m_modifyAccount(new QAction("Modify Account",m_menu))
 {
     ui.setupUi(this);
     setContextMenuPolicy(Qt::CustomContextMenu);
     m_menu->addAction(m_addTransAction);
-    connect(m_addTransAction,&QAction::triggered,m_dialog,[this](){m_dialog->createNew(m_account->Name());});
-    connect(m_dialog,&TransactionDialog::NewTransaction, this,&AccountWidget::AddTransAction);
-    connect(m_dialog,&TransactionDialog::ModifyTransaction,this,&AccountWidget::ModifyTransactions);
+    m_menu->addAction(m_modifyAccount);
+    connect(m_addTransAction,&QAction::triggered,m_dialogTransaction,[this](){m_dialogTransaction->createNew(m_account->Name());});
+    connect(m_dialogTransaction,&TransactionDialog::NewTransaction, this,&AccountWidget::AddTransAction);
+    connect(m_dialogTransaction,&TransactionDialog::ModifyTransaction,this,&AccountWidget::ModifyTransactions);
+    connect(m_modifyAccount,&QAction::triggered,this,[this](){m_dialogAccount->ModifyAccount(m_account->Name());});
+    connect(m_dialogAccount,&AccountDialog::ChangeAccount,this,
+    [this](QString name)
+    {
+        m_account->SetName(std::move(name));
+        reload();
+    });
 }
 
 
@@ -26,7 +36,7 @@ void AccountWidget::AddTransActionWidget(std::shared_ptr<Transaction> && tr)
     TransactionWidget * tmp = new TransactionWidget(ui.Container);
     tmp->setTransaction(m_account->Name(),std::move(tr));
     connect(tmp,&TransactionWidget::RemoveTransaction,this,&AccountWidget::RemoveTransaction);
-    connect(tmp,&TransactionWidget::ModifyTransaction,m_dialog,&TransactionDialog::modify);
+    connect(tmp,&TransactionWidget::ModifyTransaction,m_dialogTransaction,&TransactionDialog::modify);
     tmp->setAddAction(m_addTransAction);
     ui.vLayout->addWidget(tmp);
     m_widgets.append(tmp);

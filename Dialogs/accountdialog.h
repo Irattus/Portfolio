@@ -12,15 +12,16 @@ class AccountDialog : public QDialog
 public:
     explicit AccountDialog(QWidget *parent = nullptr);
     void CreateAccount();
-    void ModifyAccount();
+    void ModifyAccount(QString &&);
 
 private slots:
     void on_buttonBox_accepted();
 signals:
     void NewAccount(std::shared_ptr<Account> const&);
-
+    void ChangeAccount(QString);
 private:
     Ui::AccountDialog ui;
+    bool m_status;
 };
 
 #endif // ACCOUNTDIALOG_H

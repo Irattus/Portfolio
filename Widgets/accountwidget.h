@@ -8,6 +8,7 @@
 #include <QAction>
 #include "transactionwidget.h"
 #include "Dialogs/transactiondialog.h"
+#include "Dialogs/accountdialog.h"
 
 class AccountWidget : public QGroupBox
 {
@@ -32,9 +33,11 @@ private:
     Ui::AccountWidget ui;
     std::shared_ptr<Account> m_account;
     QList<TransactionWidget*> m_widgets;
-    TransactionDialog * m_dialog;
+    TransactionDialog * m_dialogTransaction;
+    AccountDialog * m_dialogAccount;
     QMenu * m_menu;
     QAction * m_addTransAction;
+    QAction * m_modifyAccount;
 };
 
 #endif // ACCOUNTWIDGET_H
