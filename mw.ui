@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MW</class>
+ <widget class="QMainWindow" name="MW">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>785</width>
+    <height>494</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>12</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>MW</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="overallTab">
+       <attribute name="title">
+        <string>Your money</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="OverallWidget" name="yourMoney" native="true"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="graphicsTab">
+       <attribute name="title">
+        <string>Graphics</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QWidget" name="widget" native="true"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>785</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>Manage</string>
+    </property>
+    <addaction name="actionNewAccount"/>
+    <addaction name="actionRemove_Account"/>
+    <addaction name="actionRef"/>
+   </widget>
+   <addaction name="menuFile"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionNewAccount">
+   <property name="text">
+    <string>New Account</string>
+   </property>
+  </action>
+  <action name="actionRemove_Account">
+   <property name="text">
+    <string>Remove Account</string>
+   </property>
+  </action>
+  <action name="actionRef">
+   <property name="text">
+    <string>Ref</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>OverallWidget</class>
+   <extends>QWidget</extends>
+   <header>Widgets/overallwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
