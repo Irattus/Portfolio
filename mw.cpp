@@ -15,28 +15,29 @@ MW::MW(QWidget *parent)
     });
 
     connect(ui.actionNewAccount,&QAction::triggered,m_dialog,&AccountDialog::CreateAccount);
+    ui.yourMoney->setBank(m_bank = load());
 
-    m_bank = std::make_shared<Bank>(Bank());
-    ui.yourMoney->setBank(m_bank);
-    load();
 }
 
-void MW::load()
+std::shared_ptr<Bank> MW::load()
 {
     QFile file = QFile(FILE);
     file.open(QIODevice::ReadOnly);
     QDataStream in(&file);
-    in>>*m_bank.get();
+    Bank b;
+    in>>b;
     file.close();
+    return std::make_shared<Bank>(b);
 }
 
 void MW::save()
 {
     m_bank->OrderAccounts();
+    Bank b = *m_bank.get();
     QFile file = QFile(FILE);
     file.open(QIODevice::WriteOnly);
     QDataStream out(&file);
-    out<<(m_bank.get());
+    out<<b;
     file.close();
 
 }

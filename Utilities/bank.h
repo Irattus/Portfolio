@@ -18,22 +18,16 @@ public:
 
     inline void OrderAccounts()
     {
-        bool ordered = false;
-        Account tmp;
         for(Account it: m_bank)
             it.OrderTransactions();
-        while(!ordered)
-        for(unsigned int i=0; i<accounts()-1;i++)
+        std::sort(m_bank.begin(),m_bank.end(),[](Account a,Account b) -> bool
         {
-            ordered = true;
-
-            if( m_bank[i].lastTransaction().m_time < m_bank[i+1].lastTransaction().m_time){
-                tmp = m_bank[i+1];
-                m_bank[i+1] = m_bank[i];
-                m_bank[i] = tmp;
-                ordered = false;
-            }
-        }
+            if(!a.transactions())
+                return true;
+            if(!b.transactions())
+                return false;
+            return (a.lastTransaction().m_time<b.lastTransaction().m_time);
+        });
     }
 
     friend QDataStream& operator<< (QDataStream& strm,

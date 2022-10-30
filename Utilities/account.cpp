@@ -41,19 +41,8 @@ Account::Account()
 
 void Account::OrderTransactions()
 {
-    bool ordered = false;
-    Transaction tmp;
-    while(!ordered)
-    for(unsigned int i=0; i<transactions()-1;i++)
-    {
-        ordered = true;
-        if(m_transactions[i].m_time < m_transactions[i+1].m_time){
-            tmp = m_transactions[i+1];
-            m_transactions[i+1] = m_transactions[i];
-            m_transactions[i] = tmp;
-            ordered = false;
-        }
-    }
+    std::sort(m_transactions.begin(),m_transactions.end(),[](Transaction a,Transaction b) -> bool
+    { return a.m_time<b.m_time;});
 }
 
 void Account::setName(QString&& name)

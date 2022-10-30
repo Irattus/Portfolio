@@ -30,7 +30,7 @@ AccountWidget::AccountWidget(QWidget *parent) :
 
 void AccountWidget::addTransAction(Transaction const& tr)
 {
-    m_account.addTransaction( std::move(tr) );
+    m_account.addTransaction( tr );
     addTransActionWidget( m_account.lastTransaction() );
 }
 
