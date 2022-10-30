@@ -1,5 +1,30 @@
 #include "account.h"
 
+
+QDataStream &operator<<(QDataStream & out, const Transaction & tr)
+{
+    out<<tr.m_time;
+    out<<tr.m_value;
+    out<<tr.m_description;
+    return out;
+}
+
+QDataStream &operator>>(QDataStream &in , Transaction &tr)
+{
+    in>>tr.m_time;
+    in>>tr.m_value;
+    in>>tr.m_description;
+    return in;
+}
+bool operator==(const Transaction& lhs, const Transaction& rhs){
+    return (lhs.m_time == rhs.m_time) && (lhs.m_value == rhs.m_value) && (lhs.m_description == rhs.m_description);
+}
+
+bool operator==(const Account& lhs, const Account& rhs)
+{
+    return lhs.name() == rhs.name();
+}
+
 Account::Account(QString&& name)
     :
       m_name(std::move(name))

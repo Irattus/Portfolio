@@ -17,7 +17,6 @@ public:
     ~MW();
 
 private slots:
-    void on_actionRef_triggered();
 
 private:
     Ui::MW ui;

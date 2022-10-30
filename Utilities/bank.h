@@ -36,33 +36,23 @@ public:
         }
     }
 
-    template<typename T = QTextStream>
-    friend T& operator<< (T& strm,
+    friend QDataStream& operator<< (QDataStream& strm,
     Bank const& s){
-    s.print(strm);
+        strm<<s.m_bank;
     return strm;
     }
 
-    template<typename T = QTextStream>
-    friend T& operator>> (T& strm,
-    Bank const& s){
-    s.read(strm);
+    friend QDataStream& operator>> (QDataStream& strm,
+    Bank  s){
+        strm>>s.m_bank;
     return strm;
     }
 
     Bank() = default;
 private:
     QVector<Account> m_bank;
-
-    template<typename T = QTextStream>
-    inline void print (T& strm) const{
-        strm << m_bank;
-    }
-
-    template<typename T = QTextStream>
-    inline void read (T& strm) const{
-        strm >> m_bank;
-    }
 };
+
+
 
 #endif // BANK_H

@@ -8,7 +8,7 @@ MW::MW(QWidget *parent)
     ui.setupUi(this);
     setWindowTitle("Portfolio");
 
-    connect(m_dialog,&AccountDialog::NewAccount,this,
+    connect(m_dialog,&AccountDialog::newAccount,this,
             [this](Account ac){
         m_bank->addAccount( std::move(ac) );
         ui.yourMoney->AddAccount(m_bank->lastAccount());

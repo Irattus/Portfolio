@@ -19,7 +19,7 @@ AccountWidget::AccountWidget(QWidget *parent) :
     connect(m_dialogTransaction,&TransactionDialog::newTransaction, this,&AccountWidget::addTransAction);
     connect(m_dialogTransaction,&TransactionDialog::modifyTransaction,this,&AccountWidget::modifyTransactions);
     connect(m_modifyAccount,&QAction::triggered,this,[this](){m_dialogAccount->ModifyAccount(m_account.name());});
-    connect(m_dialogAccount,&AccountDialog::ChangeAccount,this,
+    connect(m_dialogAccount,&AccountDialog::changeAccount,this,
     [this](QString name)
     {
         m_account.setName(std::move(name));

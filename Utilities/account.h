@@ -10,10 +10,10 @@ struct Transaction
     QString m_description;
 };
 
-bool operator==(const Transaction& lhs, const Transaction& rhs)
-{
-    return (lhs.m_time == rhs.m_time) && (lhs.m_value == rhs.m_value) && (lhs.m_description == rhs.m_description);
-}
+QDataStream &operator<<(QDataStream & out, const Transaction & tr);
+QDataStream &operator>>(QDataStream &in , Transaction &tr);
+
+bool operator==(const Transaction& lhs, const Transaction& rhs);
 
 
 class Account
@@ -39,43 +39,29 @@ public:
     inline unsigned int transactions() const { return m_transactions.size(); }
     QString name() const;
 
-
-
-
-    template<typename T>
-    friend T& operator<< (T& strm,Account  const & s) {
-        s.print(strm);
-        return strm;
+    friend QDataStream &operator<<(QDataStream & out, const Account & ac)
+    {
+        out<<ac.m_name;
+        out<<ac.m_transactions;
+        return out;
     }
 
-    template<typename T = QTextStream>
-    friend T& operator>> (T& strm,Account const& s){
-    s.read(strm);
-    return strm;
+    friend QDataStream &operator>>(QDataStream &in , Account &ac)
+    {
+        in>>ac.m_name;
+        in>>ac.m_transactions;
+        return in;
     }
 
 private:
     QVector<Transaction> m_transactions;
     QString m_name;
 
-    template<typename T>
-    inline void print (T& strm) const{
-        strm << m_name;
-        strm << m_transactions;
-    }
-
-    template<typename T>
-    inline void read (T& strm) const{
-        strm >> m_name;
-        strm >> m_transactions;
-    }
-
 
 };
 
-bool operator==(const Account& lhs, const Account& rhs)
-{
-    return lhs.name() == rhs.name();
-}
+bool operator==(const Account& lhs, const Account& rhs);
+
+
 
 #endif // ACCOUNT_H

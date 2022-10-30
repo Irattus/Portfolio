@@ -17,8 +17,8 @@ public:
 private slots:
     void on_buttonBox_accepted();
 signals:
-    void NewAccount(std::shared_ptr<Account> const&);
-    void ChangeAccount(QString);
+    void newAccount(Account const&);
+    void changeAccount(QString);
 private:
     Ui::AccountDialog ui;
     bool m_status;
