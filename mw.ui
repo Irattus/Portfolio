@@ -58,7 +58,7 @@
      <x>0</x>
      <y>0</y>
      <width>785</width>
-     <height>22</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -67,7 +67,6 @@
     </property>
     <addaction name="actionNewAccount"/>
     <addaction name="actionRemove_Account"/>
-    <addaction name="actionRef"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -80,11 +79,6 @@
   <action name="actionRemove_Account">
    <property name="text">
     <string>Remove Account</string>
-   </property>
-  </action>
-  <action name="actionRef">
-   <property name="text">
-    <string>Ref</string>
    </property>
   </action>
  </widget>

@@ -16,6 +16,7 @@ Transaction::Transaction(Transaction const& tr)
 }
 
 
+
 Transaction::Transaction(Transaction && tr)
     : m_time(tr.date()),
       m_value(tr.value()),

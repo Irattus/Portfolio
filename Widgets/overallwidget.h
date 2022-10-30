@@ -12,14 +12,13 @@ class OverallWidget : public QWidget
 public:
     explicit OverallWidget(QWidget *parent = nullptr);
 
-    inline void setBank(std::shared_ptr<Bank> b) { m_bank = b; }
+    void setBank(std::shared_ptr<Bank> b);
 
-    void Load(QString && text);
 
-    inline void AddAccount(std::shared_ptr<Account> &&ac)
-    { m_accountContainer->AddAccount(std::move(ac)); };
-    inline void RemoveAccount(std::shared_ptr<Account> const& ac)
-    { m_bank->RemoveAccount(ac); };
+    inline void AddAccount(Account &&ac)
+    { m_accountContainer->addAccount(std::move(ac)); };
+    inline void RemoveAccount(Account const& ac)
+    { m_bank->removeAccount(ac); };
 
     inline std::shared_ptr<Bank> accounts() const { return m_bank; }
 

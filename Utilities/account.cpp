@@ -17,12 +17,12 @@ Account::Account()
 void Account::OrderTransactions()
 {
     bool ordered = false;
-    std::shared_ptr<Transaction> tmp;
+    Transaction tmp;
     while(!ordered)
-    for(unsigned int i=0; i<Transactions()-1;i++)
+    for(unsigned int i=0; i<transactions()-1;i++)
     {
         ordered = true;
-        if(m_transactions[i]->date() < m_transactions[i+1]->date()){
+        if(m_transactions[i].m_time < m_transactions[i+1].m_time){
             tmp = m_transactions[i+1];
             m_transactions[i+1] = m_transactions[i];
             m_transactions[i] = tmp;
@@ -31,55 +31,55 @@ void Account::OrderTransactions()
     }
 }
 
-void Account::SetName(QString&& name)
+void Account::setName(QString&& name)
 {
     m_name = std::move(name);
 }
 
-void Account::AddTransaction(std::shared_ptr<Transaction> && tr)
+void Account::addTransaction(Transaction && tr)
 {
     m_transactions.push_back(std::move(tr));
 }
 
-void Account::AddTransaction(std::shared_ptr<Transaction> const& tr)
+void Account::addTransaction(Transaction const& tr)
 {
     m_transactions.push_back(tr);
 }
 
-void Account::RemoveTransaction(std::shared_ptr<Transaction> && tr)
+void Account::removeTransaction(Transaction const& tr)
 {
-    m_transactions.removeOne(std::move(tr));
+    m_transactions.removeOne(tr);
 }
 
-void Account::RemoveAt(unsigned int index)
+void Account::removeAt(unsigned int index)
 {
     m_transactions.removeAt(index);
 }
 
-std::shared_ptr<Transaction> Account::GetTransaction(unsigned int index) const
+Transaction Account::getTransaction(unsigned int index) const
 {
     return m_transactions.at(index);
 }
 
-std::shared_ptr<Transaction> Account::LastTransaction() const
+Transaction Account::lastTransaction() const
 {
     return m_transactions.last();
 }
 
-QString Account::Name() const
+QString Account::name() const
 {
     return m_name;
 }
 
-qreal Account::Total() const
+qreal Account::total() const
 {
     qreal total = 0;
     for(auto const& it : m_transactions)
-        total += it->value();
+        total += it.m_value;
     return total;
 }
 
-QString Account::TotalS() const
+QString Account::totalS() const
 {
-    return QString::number(Total(),'f',2);
+    return QString::number(total(),'f',2);
 }

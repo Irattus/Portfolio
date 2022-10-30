@@ -11,14 +11,14 @@ TransactionDialog::TransactionDialog(QWidget *parent) :
 
 void TransactionDialog::on_buttonBox_accepted()
 {
-    m_transaction->changeDescription(ui.commentTextEdit->toPlainText());
-    m_transaction->changeAmount(ui.amoutDSP->value() * (ui.costRadioButton->isChecked() ? -1 : 1));
-    m_transaction->changeDate(ui.dateEdit->date());
+    Transaction transaction;
+    transaction.m_description = ui.commentTextEdit->toPlainText();
+    transaction.m_value = (ui.amoutDSP->value() * (ui.costRadioButton->isChecked() ? -1 : 1));
+    transaction.m_time = (ui.dateEdit->date());
     if(m_status)
-        emit ModifyTransaction(m_transaction);
+        emit modifyTransaction(transaction);
     else
-        emit NewTransaction(m_transaction);
-    m_transaction.reset();
+        emit newTransaction(transaction);
 }
 
 void TransactionDialog::createNew(QString && name)
@@ -28,20 +28,18 @@ void TransactionDialog::createNew(QString && name)
     ui.costRadioButton->setChecked(true);
     ui.commentTextEdit->setText("No description");
     ui.amoutDSP->setValue(15);
-    m_transaction = std::make_shared<Transaction>(Transaction(QDate::currentDate(),0,""));
     show();
     m_status = false;
 }
 
-void TransactionDialog::modify(QString const& name,std::shared_ptr<Transaction> const& tr)
+void TransactionDialog::modify(QString const& name,Transaction const& tr)
 {
     setWindowTitle("Modify Transaction");
     ui.AccountName->setText(name);
-    (tr->value() > 0 ? ui.entryRadioButton :ui.costRadioButton) ->setChecked(true);
-    ui.amoutDSP->setValue( tr->value() * (tr->value() <0 ? -1 :1));
-    ui.dateEdit->setDate(tr->date());
-    ui.commentTextEdit->setText(tr->description());
-    m_transaction = tr;
+    (tr.m_value > 0 ? ui.entryRadioButton :ui.costRadioButton) ->setChecked(true);
+    ui.amoutDSP->setValue( tr.m_value * (tr.m_value <0 ? -1 :1));
+    ui.dateEdit->setDate(tr.m_time);
+    ui.commentTextEdit->setText(tr.m_description);
     show();
     m_status = true;
 }

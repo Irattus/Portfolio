@@ -10,11 +10,10 @@ class AccountWidgetContainer : public QWidget
 
 public:
     explicit AccountWidgetContainer(QWidget *parent = nullptr);
-    bool NotAlreadyIn(std::shared_ptr<Account> &&);
-    void AddAccount(std::shared_ptr<Account> &&);
-    void RemoveAccount(AccountWidget *);
+    void addAccount(Account &&);
+    void removeAccount(AccountWidget *);
 signals:
-    void DeleteAccount(std::shared_ptr<Account> const&);
+    void deleteAccount(Account const&);
 
 private:
 };

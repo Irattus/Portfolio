@@ -10,15 +10,14 @@ class TransactionDialog : public QDialog
 public:
     explicit TransactionDialog(QWidget *parent = nullptr);
     void createNew(QString&& name);
-    void modify(QString const& name,std::shared_ptr<Transaction> const&);
+    void modify(QString const& name,Transaction const&);
 signals:
-    void NewTransaction(std::shared_ptr<Transaction> const&);
-    void ModifyTransaction(std::shared_ptr<Transaction> const&);
+    void newTransaction(Transaction const&);
+    void modifyTransaction(Transaction const&);
 private slots:
     void on_buttonBox_accepted();
 
 private:
-    std::shared_ptr<Transaction> m_transaction;
     bool m_status;
     Ui::TransactionDialog ui;
 };

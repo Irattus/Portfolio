@@ -11,7 +11,6 @@ CONFIG += c++17
 SOURCES += \
     Utilities/account.cpp \
     Widgets/accountwidgetcontainer.cpp \
-    Utilities/transaction.cpp \
     Dialogs/accountdialog.cpp \
     Widgets/accountwidget.cpp \
     main.cpp \
@@ -24,7 +23,6 @@ HEADERS += \
     Utilities/account.h \
     Widgets/accountwidgetcontainer.h \
     Utilities/bank.h \
-    Utilities/transaction.h \
     Dialogs/accountdialog.h \
     Widgets/accountwidget.h \
     mw.h \

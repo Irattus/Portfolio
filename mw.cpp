@@ -9,9 +9,9 @@ MW::MW(QWidget *parent)
     setWindowTitle("Portfolio");
 
     connect(m_dialog,&AccountDialog::NewAccount,this,
-            [this](std::shared_ptr<Account> ac){
-        m_bank->AddAccount( std::move(ac) );
-        ui.yourMoney->AddAccount(m_bank->LastAccount());
+            [this](Account ac){
+        m_bank->addAccount( std::move(ac) );
+        ui.yourMoney->AddAccount(m_bank->lastAccount());
     });
 
     connect(ui.actionNewAccount,&QAction::triggered,m_dialog,&AccountDialog::CreateAccount);
@@ -25,18 +25,18 @@ void MW::load()
 {
     QFile file = QFile(FILE);
     file.open(QIODevice::ReadOnly);
-    ui.yourMoney->Load(QString::fromUtf8(file.readAll()));
+    QDataStream in(&file);
+    in>>*m_bank.get();
     file.close();
 }
 
 void MW::save()
 {
     m_bank->OrderAccounts();
-    std::cout<<(*m_bank.get());
     QFile file = QFile(FILE);
     file.open(QIODevice::WriteOnly);
-    QTextStream out(&file);
-    out<<(*m_bank.get());
+    QDataStream out(&file);
+    out<<(m_bank.get());
     file.close();
 
 }
@@ -44,10 +44,5 @@ void MW::save()
 MW::~MW()
 {
     save();
-}
-
-void MW::on_actionRef_triggered()
-{
-    m_bank->Refs();
 }
 

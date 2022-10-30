@@ -16,21 +16,21 @@ class AccountWidget : public QGroupBox
 
 public:
     explicit AccountWidget(QWidget *parent = nullptr);
-    void setAccount(std::shared_ptr<Account> && a);
-    void addTransAction(std::shared_ptr<Transaction> const&tr);
-    void addTransActionWidget(std::shared_ptr<Transaction> &&tr);
+    void setAccount(Account && a);
+    void addTransAction(Transaction const&tr);
+    void addTransActionWidget(Transaction &&tr);
     void removeTransaction(TransactionWidget*);
 
     inline void setAddAction(QAction * ac) { m_menu->addAction(ac); }
-    inline void reload() { setTitle(m_account->Name()+": "+m_account->TotalS()); }
+    inline void reload() { setTitle(m_account.name()+": "+m_account.totalS()); }
 
-    inline std::shared_ptr<Account> account() const { return m_account; }
+    inline Account account() const { return m_account; }
 
 private slots:
-    void modifyTransactions(std::shared_ptr<Transaction> const&);
+    void modifyTransactions(Transaction const&);
     void on_AccountWidget_customContextMenuRequested(const QPoint &pos);
 private:
-    std::shared_ptr<Account> m_account;
+    Account m_account;
     QList<TransactionWidget*> m_widgets;
     TransactionDialog * m_dialogTransaction;
     AccountDialog * m_dialogAccount;

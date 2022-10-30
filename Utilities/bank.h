@@ -6,36 +6,28 @@
 class Bank
 {
 public:
-    inline void AddAccount(std::shared_ptr<Account> &&ac) { m_bank.push_back(std::move(ac)); }
+    inline void addAccount(Account &&ac) { m_bank.push_back(std::move(ac)); }
 
-    inline void RemoveAccount(std::shared_ptr<Account> const&ac) { m_bank.removeOne( std::move(ac) ); }
+    inline void removeAccount(Account const& ac) { m_bank.removeOne( ac ); }
 
-    inline unsigned int Accounts() const { return m_bank.size(); }
+    inline unsigned int accounts() const { return m_bank.size(); }
 
-    inline std::shared_ptr<Account> GetAccount(unsigned int n) const { return m_bank[n]; }
+    inline Account getAccount(unsigned int n) const { return m_bank[n]; }
 
-    inline std::shared_ptr<Account> LastAccount() const { return m_bank.last(); }
-
-    inline void Refs() const
-    {
-        for(auto const& it: m_bank){
-            qDebug()<<"Account "<<it->Name()<<":"<<it.use_count();
-            it->Refs();
-        }
-    }
+    inline Account lastAccount() const { return m_bank.last(); }
 
     inline void OrderAccounts()
     {
         bool ordered = false;
-        std::shared_ptr<Account> tmp;
-        for(auto const& it: m_bank)
-            it->OrderTransactions();
+        Account tmp;
+        for(Account it: m_bank)
+            it.OrderTransactions();
         while(!ordered)
-        for(unsigned int i=0; i<Accounts()-1;i++)
+        for(unsigned int i=0; i<accounts()-1;i++)
         {
             ordered = true;
 
-            if( m_bank[i]->LastTransaction()->date() < m_bank[i+1]->LastTransaction()->date()){
+            if( m_bank[i].lastTransaction().m_time < m_bank[i+1].lastTransaction().m_time){
                 tmp = m_bank[i+1];
                 m_bank[i+1] = m_bank[i];
                 m_bank[i] = tmp;
@@ -51,14 +43,25 @@ public:
     return strm;
     }
 
+    template<typename T = QTextStream>
+    friend T& operator>> (T& strm,
+    Bank const& s){
+    s.read(strm);
+    return strm;
+    }
+
     Bank() = default;
 private:
-    QVector<std::shared_ptr<Account>> m_bank;
+    QVector<Account> m_bank;
 
     template<typename T = QTextStream>
     inline void print (T& strm) const{
-        for(auto const& it: m_bank)
-            strm<<'\n'<<*it.get()<<'\n';
+        strm << m_bank;
+    }
+
+    template<typename T = QTextStream>
+    inline void read (T& strm) const{
+        strm >> m_bank;
     }
 };
 

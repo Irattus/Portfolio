@@ -21,7 +21,7 @@ void TransactionWidget::setAddAction(QAction * ac)
 }
 
 
-void TransactionWidget::setTransaction(QString && name,std::shared_ptr<Transaction>&& tr)
+void TransactionWidget::setTransaction(QString && name,Transaction&& tr)
 {
     m_accountName = std::move(name);
     m_transaction = std::move(tr);
@@ -30,24 +30,24 @@ void TransactionWidget::setTransaction(QString && name,std::shared_ptr<Transacti
 
 void TransactionWidget::reload()
 {
-    ui.description->setText(m_transaction->description());
-    ui.date->setText(m_transaction->date().toString("dd.MM.yyyy"));
+    ui.description->setText(m_transaction.m_description);
+    ui.date->setText(m_transaction.m_time.toString("dd.MM.yyyy"));
     ui.amount->setStyleSheet(
-                m_transaction->value() > 0 ?
+                m_transaction.m_value > 0 ?
                   "color: green" : "color: red" );
     ui.amount->setFont(QFont("Cambria",12,QFont::Bold));
-    ui.amount->setText(m_transaction->valueS());
+    ui.amount->setText(QString::number(m_transaction.m_value,'f',2));
 }
 
 void TransactionWidget::on_modifyButton_clicked()
 {
-    emit ModifyTransaction(m_accountName,m_transaction);
+    emit modifyTransaction(m_accountName,m_transaction);
 }
 
 
 void TransactionWidget::on_deleteButton_clicked()
 {
-    emit RemoveTransaction(this);
+    emit removeTransaction(this);
 }
 
 
