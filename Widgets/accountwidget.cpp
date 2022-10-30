@@ -14,6 +14,7 @@ AccountWidget::AccountWidget(QWidget *parent) :
     setContextMenuPolicy(Qt::CustomContextMenu);
     m_menu->addAction(m_addTransAction);
     m_menu->addAction(m_modifyAccount);
+    connect(this,&AccountWidget::customContextMenuRequested, this, &AccountWidget::on_AccountWidget_customContextMenuRequested);
     connect(m_addTransAction,&QAction::triggered,m_dialogTransaction,[this](){m_dialogTransaction->createNew(m_account->Name());});
     connect(m_dialogTransaction,&TransactionDialog::NewTransaction, this,&AccountWidget::addTransAction);
     connect(m_dialogTransaction,&TransactionDialog::ModifyTransaction,this,&AccountWidget::modifyTransactions);
