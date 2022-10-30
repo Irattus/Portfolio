@@ -1,11 +1,10 @@
 #ifndef ACCOUNTWIDGETCONTAINER_H
 #define ACCOUNTWIDGETCONTAINER_H
 
-#include "ui_accountwidgetcontainer.h"
 #include "Utilities/account.h"
 #include "Widgets/accountwidget.h"
 
-class AccountWidgetContainer : public QFrame
+class AccountWidgetContainer : public QWidget
 {
     Q_OBJECT
 
@@ -18,7 +17,6 @@ signals:
     void DeleteAccount(std::shared_ptr<Account> const&);
 
 private:
-    Ui::AccountWidgetContainer ui;
 };
 
 #endif // ACCOUNTWIDGETCONTAINER_H

@@ -1,13 +1,17 @@
 #include "overallwidget.h"
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
-#include "accountwidget.h"
 
 OverallWidget::OverallWidget(QWidget *parent) :
     QWidget(parent)
 {
-    ui.setupUi(this);
-    connect(ui.container,&AccountWidgetContainer::DeleteAccount,this,&OverallWidget::RemoveAccount);
+    setLayout(new QVBoxLayout(this));
+    m_scrollArea = new QScrollArea;
+    m_accountContainer = new AccountWidgetContainer(m_scrollArea);
+    layout()->addWidget(m_scrollArea);
+    m_scrollArea->setWidget(m_accountContainer);
+
+    connect(m_accountContainer,&AccountWidgetContainer::DeleteAccount,this,&OverallWidget::RemoveAccount);
 }
 
 void OverallWidget::Load(QString &&text)
@@ -39,5 +43,5 @@ void OverallWidget::Load(QString &&text)
     if(tmp != nullptr)
         m_bank->AddAccount( std::move(tmp) );
     for(unsigned int i = 0; i < m_bank->Accounts() ; i++)
-        ui.container->AddAccount( m_bank->GetAccount(i) );
+        m_accountContainer->AddAccount( m_bank->GetAccount(i) );
 }

@@ -33,11 +33,9 @@ HEADERS += \
     Widgets/transactionwidget.h
 
 FORMS += \
-    Widgets/accountwidgetcontainer.ui \
     Dialogs/accountdialog.ui \
     Widgets/accountwidget.ui \
     mw.ui \
-    Widgets/overallwidget.ui \
     Dialogs/transactiondialog.ui \
     Widgets/transactionwidget.ui
 
