@@ -11,8 +11,8 @@ class AccountDialog : public QDialog
 
 public:
     explicit AccountDialog(QWidget *parent = nullptr);
-    void CreateAccount();
-    void ModifyAccount(QString &&);
+    void createAccount();
+    void modifyAccount(QString const&);
 
 private slots:
     void on_buttonBox_accepted();

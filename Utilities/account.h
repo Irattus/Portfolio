@@ -26,8 +26,8 @@ public:
 
     void OrderTransactions();
 
-    void addTransaction(Transaction &&tr);
     void addTransaction(Transaction const& tr);
+    void modifyTransaction(Transaction const& source, Transaction const& dest);
     void removeTransaction(Transaction const&tr);
     void removeAt(unsigned int);
 
@@ -50,6 +50,23 @@ public:
     {
         in>>ac.m_name;
         in>>ac.m_transactions;
+        return in;
+    }
+
+    friend QDataStream &operator<<(QDataStream & out, const std::shared_ptr<Account> & ac)
+    {
+        out<<ac->m_name;
+        out<<ac->m_transactions;
+        return out;
+    }
+
+    friend QDataStream &operator>>(QDataStream &in , std::shared_ptr<Account> &ac)
+    {
+        QString text;
+        QVector<Transaction> tmp;
+        in>>text;
+        in>>tmp;
+        int a;
         return in;
     }
 

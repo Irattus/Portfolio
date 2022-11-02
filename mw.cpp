@@ -1,6 +1,8 @@
 #include "mw.h"
 #define FILE "bank.dll"
 
+
+
 MW::MW(QWidget *parent)
     : QMainWindow(parent),
       m_dialog(new AccountDialog(this))

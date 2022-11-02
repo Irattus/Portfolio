@@ -7,7 +7,7 @@ AccountDialog::AccountDialog(QWidget *parent) :
     ui.setupUi(this);
 }
 
-void AccountDialog::CreateAccount()
+void AccountDialog::createAccount()
 {
     show();
     setWindowTitle("Create Account");
@@ -15,7 +15,7 @@ void AccountDialog::CreateAccount()
     m_status = true;
 }
 
-void AccountDialog::ModifyAccount(QString && name)
+void AccountDialog::modifyAccount(QString const& name)
 {
     show();
     setWindowTitle("Modify Account");
