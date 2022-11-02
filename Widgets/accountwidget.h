@@ -7,6 +7,8 @@
 #include <QAction>
 #include "Utilities/account.h"
 #include "widgetcontainer.h"
+#include "transactionwidget.h"
+#include "Dialogs/transactiondialog.h"
 
 class AccountWidget : public QGroupBox
 {
@@ -16,7 +18,8 @@ public:
     explicit AccountWidget(QWidget *parent = nullptr);
     void setMenu(QMenu * menu);
     void setAccount(std::shared_ptr<Account> const& a);
-    void addTransActionWidget(Transaction const&tr);
+    void addTransactionWidget(Transaction const&tr);
+    void createTransactionWidget(Transaction const&tr);
 
     inline void reload() { setTitle(m_account->name()+": "+m_account->totalS()); }
 
@@ -28,6 +31,7 @@ private:
     std::shared_ptr<Account> m_account;
     WidgetContainer * m_transactionContainer;
     QMenu * m_menu;
+    TransactionDialog * m_transactionDialog;
 
 
     //TransactionDialog * m_dialogTransaction;

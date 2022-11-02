@@ -12,7 +12,7 @@ public:
     void createNew(std::shared_ptr<Account> const&  ac);
     void modify(std::shared_ptr<Account> const&  ac,Transaction const&);
 signals:
-    void newTransaction(std::shared_ptr<Account> const&,Transaction const&);
+    void newTransaction(Transaction const&);
     void modifyTransaction(std::shared_ptr<Account> const&,Transaction const&);
 private slots:
     void on_buttonBox_accepted();

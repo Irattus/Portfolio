@@ -3,11 +3,10 @@
 #include <QScrollArea>
 #include "Widgets/widgetcontainer.h"
 #include "Dialogs/accountdialog.h"
-#include "Dialogs/transactiondialog.h"
 #include "Utilities/account.h"
 #include "Utilities/bank.h"
 
-class OverallWidget : public QWidget
+class OverallWidget : public WidgetContainer
 {
     Q_OBJECT
 
@@ -24,9 +23,8 @@ public:
 private:
     std::shared_ptr<Bank> m_bank;
     QMenu * m_menu;
-    QScrollArea * m_scrollArea;
-    WidgetContainer * m_accountContainer;
     AccountDialog *  m_accountDialog;
+    QAction * m_addAccount;
 
 
 

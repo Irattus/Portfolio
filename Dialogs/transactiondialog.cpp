@@ -18,7 +18,7 @@ void TransactionDialog::on_buttonBox_accepted()
     if(m_status)
         emit modifyTransaction(m_account,transaction);
     else
-        emit newTransaction(m_account,transaction);
+        emit newTransaction(transaction);
 }
 
 void TransactionDialog::createNew(std::shared_ptr<Account> const&  ac)
