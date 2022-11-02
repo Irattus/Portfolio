@@ -29,7 +29,8 @@ private slots:
     void on_AccountWidget_customContextMenuRequested(const QPoint &pos);
 private:
     std::shared_ptr<Account> m_account;
-    QScrollArea * m_transactionContainer;
+    QScrollArea * m_scrollArea;
+    QWidget * m_transactionContainer;
     QMenu * m_menu;
     TransactionDialog * m_transactionDialog;
 

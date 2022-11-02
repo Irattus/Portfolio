@@ -23,9 +23,9 @@ public:
         std::sort(m_bank.begin(),m_bank.end(),[](std::shared_ptr<Account> a,std::shared_ptr<Account> b) -> bool
         {
             if(!a->transactions())
-                return true;
-            if(!b->transactions())
                 return false;
+            if(!b->transactions())
+                return true;
             return (a->lastTransaction().m_time<b->lastTransaction().m_time);
         });
     }

@@ -21,6 +21,7 @@ public:
 
 private:
     std::shared_ptr<Bank> m_bank;
+    QWidget * m_container;
     QMenu * m_menu;
     AccountDialog *  m_accountDialog;
     QAction * m_addAccount;

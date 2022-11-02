@@ -4,7 +4,14 @@
 OverallWidget::OverallWidget(QWidget *parent) :
     QScrollArea(parent)
 {
+    //setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents);
     setLayout(new QVBoxLayout(this));
+    setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+    setWidgetResizable( true );
+    m_container = new QWidget (this);
+    m_container->setLayout(new QVBoxLayout(this));
+    setWidget(m_container);
+
     m_accountDialog = new AccountDialog(this);
     m_menu = new QMenu(this);
     m_addAccount = new QAction("Add Account",m_menu);
@@ -35,7 +42,7 @@ void OverallWidget::createAccount(std::shared_ptr<Account> const& ac)
     AccountWidget * accountWidget = new AccountWidget(this);
     accountWidget->setAccount( ac );
     accountWidget->reload();
-    layout()->addWidget(accountWidget);
+    m_container->layout()->addWidget(accountWidget);
 
     QMenu * accountMenu = new QMenu(accountWidget);
 
