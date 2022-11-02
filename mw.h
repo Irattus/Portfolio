@@ -23,6 +23,5 @@ private:
     std::shared_ptr<Bank> load();
     void save();
     std::shared_ptr<Bank> m_bank;
-    AccountDialog * m_dialog;
 };
 #endif // MW_H

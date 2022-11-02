@@ -19,10 +19,10 @@ bool operator==(const Transaction& lhs, const Transaction& rhs);
 class Account
 {
 public:
-    Account(QString&& name);
+    Account(QString const& name);
     Account();
 
-    void setName(QString&& name);
+    void setName(QString const& name);
 
     void OrderTransactions();
 
@@ -62,11 +62,13 @@ public:
 
     friend QDataStream &operator>>(QDataStream &in , std::shared_ptr<Account> &ac)
     {
-        QString text;
-        QVector<Transaction> tmp;
-        in>>text;
-        in>>tmp;
-        int a;
+        QString tmpText;
+        QVector<Transaction> tmpTransactionVector;
+        in>>tmpText;
+        in>>tmpTransactionVector;
+        ac = std::make_shared<Account>(Account(tmpText));
+        for(Transaction const& it: tmpTransactionVector)
+            ac->addTransaction(it);
         return in;
     }
 

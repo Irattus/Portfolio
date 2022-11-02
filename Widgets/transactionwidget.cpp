@@ -7,6 +7,48 @@ TransactionWidget::TransactionWidget(QWidget *parent) :
     m_removeTransAction(new QAction("Remove Transaction",m_menu))
 {
     ui.setupUi(this);
+    //Transaction Dialog
+
+    QMenu * transactionMenu = new QMenu(this);
+
+    connect(m_transactionDialog,&TransactionDialog::modifyTransaction,this,
+    [](std::shared_ptr<Account> const& ac,Transaction const& tr)
+        {
+            //modify
+        }
+    );
+
+    connect(m_transactionDialog,&TransactionDialog::newTransaction,this,
+    [](std::shared_ptr<Account> const& ac,Transaction const& tr)
+        {
+            ac->addTransaction(tr);
+        }
+    );
+
+    //Transaction Widget Menu
+
+
+
+
+
+    QAction * modifyTransaction = new QAction("Modify Transaction",transactionMenu);
+    connect(modifyTransaction,&QAction::triggered,this,
+    []()
+        {
+            //modify
+        }
+    );
+
+    QAction * removeTransaction = new QAction("Remove Transaction",transactionMenu);
+    connect(removeTransaction,&QAction::triggered,this,
+    []()
+        {
+            //remove
+        }
+    );
+    transactionMenu->addAction(addTransaction);
+    transactionMenu->addAction(modifyTransaction);
+    transactionMenu->addAction(removeTransaction);
 }
 
 void TransactionWidget::setAddAction(QAction * ac)
@@ -32,10 +74,7 @@ void TransactionWidget::reload()
 {
     ui.description->setText(m_transaction.m_description);
     ui.date->setText(m_transaction.m_time.toString("dd.MM.yyyy"));
-    ui.amount->setStyleSheet(
-                m_transaction.m_value > 0 ?
-                  "color: green" : "color: red" );
-    ui.amount->setFont(QFont("Cambria",12,QFont::Bold));
+
     ui.amount->setText(QString::number(m_transaction.m_value,'f',2));
 }
 

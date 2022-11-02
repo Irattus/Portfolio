@@ -10,24 +10,36 @@ OverallWidget::OverallWidget(QWidget *parent) :
     layout()->addWidget(m_scrollArea);
     m_scrollArea->setWidget(m_accountContainer);
     m_accountDialog = new AccountDialog(this);
-    m_transactionDialog = new TransactionDialog(this);
-
-
-
+    m_menu = new QMenu(this);
+    QAction * addAccountAction = new QAction("Add Account",m_menu);
+    connect(addAccountAction,&QAction::triggered, m_accountDialog,&AccountDialog::createAccount);
+    m_menu->addAction(addAccountAction);
+    connect(m_accountDialog,&AccountDialog::newAccount, this,&OverallWidget::addAccount);
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this,&OverallWidget::customContextMenuRequested,this,[this](QPoint const& pos){m_menu->exec(mapToGlobal(pos)); });
 }
 
 void OverallWidget::setBank(std::shared_ptr<Bank> bank)
 {
     m_bank = bank;
-    for (unsigned int i=0; i< m_bank->accounts(); i++)
-        addAccount(m_bank->getAccount(i));
+    for(int i=0; i<m_bank->accounts();i++)
+        createAccount(m_bank->getAccount(i));
+
+}
+
+void OverallWidget::addAccount(std::shared_ptr<Account> const& ac)
+{
+    m_bank->addAccount(ac);
+    createAccount(ac);
 }
 
 
-void OverallWidget::addAccount(Account const& ac)
+void OverallWidget::createAccount(std::shared_ptr<Account> const& ac)
 {
-
-    AccountWidget * accountWidget = new AccountWidget(this);
+    AccountWidget * accountWidget = new AccountWidget(m_accountContainer);
+    accountWidget->setAccount( ac );
+    accountWidget->reload();
+    m_accountContainer->addWidget(accountWidget);
 
     QMenu * accountMenu = new QMenu(accountWidget);
 
@@ -49,62 +61,17 @@ void OverallWidget::addAccount(Account const& ac)
         }
     );
 
-    QAction * addTransaction = new QAction("Add Transaction",accountMenu);
-    connect(addTransaction,&QAction::triggered,m_transactionDialog,
-    [this,ac]()
-        {
-            m_transactionDialog->createNew(ac);
-        }
-    );
-
-    //Transaction Dialog
-
-    connect(m_transactionDialog,&TransactionDialog::modifyTransaction,this,
-    [](Account const& ac,Transaction const& tr)
-        {
-            //modify
-        }
-    );
-
-    connect(m_transactionDialog,&TransactionDialog::newTransaction,this,
-    [this](Account const& ac,Transaction const& tr)
-        {
-            m_bank->addTransaction(ac,tr);
-        }
-    );
-
-    //Transaction Widget Menu
-
-    QMenu * transactionMenu = new QMenu(this);
-
-    QAction * modifyTransaction = new QAction("Modify Transaction",transactionMenu);
-    connect(modifyTransaction,&QAction::triggered,this,
-    []()
-        {
-            //modify
-        }
-    );
-
-    QAction * removeTransaction = new QAction("Remove Transaction",transactionMenu);
-    connect(removeTransaction,&QAction::triggered,this,
-    []()
-        {
-            //remove
-        }
-    );
 
 
 
-    transactionMenu->addAction(addTransaction);
-    transactionMenu->addAction(modifyTransaction);
-    transactionMenu->addAction(removeTransaction);
+/*  ui.amount->setStyleSheet(
+                m_transaction.m_value > 0 ?
+                  "color: green" : "color: red" );
+    ui.amount->setFont(QFont("Cambria",12,QFont::Bold));*/
 
-    accountMenu->addAction( addTransaction );
     accountMenu->addAction( removeAccount );
 
     accountWidget->setMenu(accountMenu);
-    accountWidget->setAccount( ac );
-    accountWidget->reload();
-    m_accountContainer->addWidget(accountWidget);
+
 }
 

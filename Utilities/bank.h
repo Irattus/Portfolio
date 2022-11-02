@@ -6,27 +6,27 @@
 class Bank
 {
 public:
-    inline void addAccount(Account &&ac) { m_bank.push_back(std::move(ac)); }
+    inline void addAccount(std::shared_ptr<Account> const& ac) { m_bank.append(ac); }
 
-    inline void removeAccount(Account const& ac) { m_bank.removeOne( ac ); }
+    inline void removeAccount(std::shared_ptr<Account> const& ac) { m_bank.removeOne( ac ); }
 
     inline unsigned int accounts() const { return m_bank.size(); }
 
-    inline Account getAccount(unsigned int n) const { return m_bank[n]; }
+    inline std::shared_ptr<Account> getAccount(unsigned int n) const { return m_bank[n]; }
 
-    inline Account lastAccount() const { return m_bank.last(); }
+    inline std::shared_ptr<Account> lastAccount() const { return m_bank.last(); }
 
     inline void OrderAccounts()
     {
-        for(Account it: m_bank)
-            it.OrderTransactions();
-        std::sort(m_bank.begin(),m_bank.end(),[](Account a,Account b) -> bool
+        for(std::shared_ptr<Account> it: m_bank)
+            it->OrderTransactions();
+        std::sort(m_bank.begin(),m_bank.end(),[](std::shared_ptr<Account> a,std::shared_ptr<Account> b) -> bool
         {
-            if(!a.transactions())
+            if(!a->transactions())
                 return true;
-            if(!b.transactions())
+            if(!b->transactions())
                 return false;
-            return (a.lastTransaction().m_time<b.lastTransaction().m_time);
+            return (a->lastTransaction().m_time<b->lastTransaction().m_time);
         });
     }
 
@@ -37,14 +37,22 @@ public:
     }
 
     friend QDataStream& operator>> (QDataStream& strm,
-    Bank  s){
-        strm>>s.m_bank;
+    Bank & s){
+        QVector<std::shared_ptr<Account>> tmp;
+        strm>>tmp;
+        s.m_bank = tmp;
+    return strm;
+    }
+
+    friend QDataStream& operator<< (QDataStream& strm,
+    std::shared_ptr<Bank> const& s){
+        strm<<s->m_bank;
     return strm;
     }
 
     Bank() = default;
 private:
-    QVector<Account> m_bank;
+    QVector<std::shared_ptr<Account>> m_bank;
 };
 
 

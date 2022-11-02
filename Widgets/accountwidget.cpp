@@ -9,44 +9,34 @@ AccountWidget::AccountWidget(QWidget *parent) :
     setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(this,&AccountWidget::customContextMenuRequested, this, &AccountWidget::on_AccountWidget_customContextMenuRequested);
+    setStyleSheet("background-color:blue;");
+
+}
+
+void AccountWidget::setMenu(QMenu * menu)
+{
+    m_menu = menu;
+    QAction * addTransaction = new QAction("Add Transaction",m_menu);
+    /*connect(addTransaction,&QAction::triggered,m_dial,
+    [this]()
+        {
+            m_transactionDialog->createNew(m_account);
+        }
+    );*/
+    m_menu->addAction(addTransaction);
 
 }
 
 void AccountWidget::addTransActionWidget(Transaction const& tr)
 {
-    /*TransactionWidget * tmp = new TransactionWidget(this);
-    tmp->setTransaction(m_account.name(),std::move(tr));
-    connect(tmp,&TransactionWidget::removeTransaction,this,&AccountWidget::removeTransaction);
-    connect(tmp,&TransactionWidget::modifyTransaction,m_dialogTransaction,&TransactionDialog::modify);
-    tmp->setAddAction(m_addTransAction);
-    layout()->addWidget(tmp);
-    m_widgets.append(tmp);*/
-    reload();
-}
-/*
-void AccountWidget::modifyTransactions(Transaction const& tr)
-{
-    for(TransactionWidget * it: m_widgets)
-        if(it->transaction()==tr)
-            it->reload();
     reload();
 }
 
-
-void AccountWidget::removeTransaction(TransactionWidget* widget)
-{
-    m_account.removeTransaction(widget->transaction());
-    layout()->removeWidget(widget);
-    m_widgets.removeOne(widget);
-    delete widget;
-    reload();
-}
-*/
-void AccountWidget::setAccount(Account const& a)
+void AccountWidget::setAccount(std::shared_ptr<Account> const& a)
 {
     m_account = a;
-    for(unsigned int i=0; i < m_account.transactions(); i++)
-        addTransActionWidget(m_account.getTransaction(i));
+    for(unsigned int i=0; i < m_account->transactions(); i++)
+        addTransActionWidget(m_account->getTransaction(i));
 }
 
 void AccountWidget::on_AccountWidget_customContextMenuRequested(const QPoint &pos)

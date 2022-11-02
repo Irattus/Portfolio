@@ -16,16 +16,17 @@ public:
 
     void setBank(std::shared_ptr<Bank> b);
 
-    void addAccount(Account const& ac);
+    void addAccount(std::shared_ptr<Account> const& ac);
+    void createAccount(std::shared_ptr<Account> const& ac);
 
     inline std::shared_ptr<Bank> bank() const { return m_bank; }
 
 private:
     std::shared_ptr<Bank> m_bank;
+    QMenu * m_menu;
     QScrollArea * m_scrollArea;
     WidgetContainer * m_accountContainer;
     AccountDialog *  m_accountDialog;
-    TransactionDialog * m_transactionDialog;
 
 
 

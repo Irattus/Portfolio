@@ -27,7 +27,7 @@ void AccountDialog::on_buttonBox_accepted()
 {
     if(ui.lineEdit->text().isEmpty()) return;
     if(m_status)
-        emit newAccount(Account(ui.lineEdit->text()));
+        emit newAccount(std::make_shared<Account>(Account(ui.lineEdit->text())));
     else
         emit changeAccount(ui.lineEdit->text());
 

@@ -28,12 +28,9 @@ private slots:
 
 private:
     Ui::TransactionWidget ui;
-    QString m_accountName;
+    std::shared_ptr<Account> m_account;
     Transaction m_transaction;
-    QMenu * m_menu;
-    QAction * m_addTransAction;
-    QAction * m_modifyTransAction;
-    QAction * m_removeTransAction;
+    QMenu * m_transactionMenu;
 };
 
 #endif // TRANSACTIONWIDGET_H

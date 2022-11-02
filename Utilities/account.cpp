@@ -16,6 +16,7 @@ QDataStream &operator>>(QDataStream &in , Transaction &tr)
     in>>tr.m_description;
     return in;
 }
+
 bool operator==(const Transaction& lhs, const Transaction& rhs){
     return (lhs.m_time == rhs.m_time) && (lhs.m_value == rhs.m_value) && (lhs.m_description == rhs.m_description);
 }
@@ -25,9 +26,9 @@ bool operator==(const Account& lhs, const Account& rhs)
     return lhs.name() == rhs.name();
 }
 
-Account::Account(QString&& name)
+Account::Account(QString const& name)
     :
-      m_name(std::move(name))
+      m_name(name)
 {
 
 }
@@ -45,14 +46,9 @@ void Account::OrderTransactions()
     { return a.m_time<b.m_time;});
 }
 
-void Account::setName(QString&& name)
+void Account::setName(QString const& name)
 {
-    m_name = std::move(name);
-}
-
-void Account::addTransaction(Transaction && tr)
-{
-    m_transactions.push_back(std::move(tr));
+    m_name = name;
 }
 
 void Account::addTransaction(Transaction const& tr)
@@ -88,8 +84,8 @@ QString Account::name() const
 qreal Account::total() const
 {
     qreal total = 0;
-    for(auto const& it : m_transactions)
-        total += it.m_value;
+    for(int i= 0; i< m_transactions.size(); i++)
+        total += m_transactions.at(i).m_value;
     return total;
 }
 

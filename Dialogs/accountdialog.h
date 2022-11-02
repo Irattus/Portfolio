@@ -13,12 +13,13 @@ public:
     explicit AccountDialog(QWidget *parent = nullptr);
     void createAccount();
     void modifyAccount(QString const&);
+signals:
+    void newAccount(std::shared_ptr<Account> const&);
+    void changeAccount(QString);
 
 private slots:
     void on_buttonBox_accepted();
-signals:
-    void newAccount(Account const&);
-    void changeAccount(QString);
+
 private:
     Ui::AccountDialog ui;
     bool m_status;

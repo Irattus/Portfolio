@@ -21,11 +21,11 @@ void TransactionDialog::on_buttonBox_accepted()
         emit newTransaction(m_account,transaction);
 }
 
-void TransactionDialog::createNew(Account const&  ac)
+void TransactionDialog::createNew(std::shared_ptr<Account> const&  ac)
 {
     m_account = ac;
     setWindowTitle("Create Transaction");
-    ui.AccountName->setText( ac.name() );
+    ui.AccountName->setText( ac->name() );
     ui.costRadioButton->setChecked(true);
     ui.commentTextEdit->setText("No description");
     ui.amoutDSP->setValue(15);
@@ -33,11 +33,11 @@ void TransactionDialog::createNew(Account const&  ac)
     m_status = false;
 }
 
-void TransactionDialog::modify(Account const&  ac,Transaction const& tr)
+void TransactionDialog::modify(std::shared_ptr<Account> const&  ac,Transaction const& tr)
 {
     m_account = ac;
     setWindowTitle("Modify Transaction");
-    ui.AccountName->setText(ac.name());
+    ui.AccountName->setText(ac->name());
     (tr.m_value > 0 ? ui.entryRadioButton :ui.costRadioButton) ->setChecked(true);
     ui.amoutDSP->setValue( tr.m_value * (tr.m_value <0 ? -1 :1));
     ui.dateEdit->setDate(tr.m_time);
