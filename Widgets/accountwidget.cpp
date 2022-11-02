@@ -4,7 +4,8 @@ AccountWidget::AccountWidget(QWidget *parent) :
     QGroupBox(parent)
 {
     setLayout(new QVBoxLayout(this));
-    m_transactionContainer = new WidgetContainer(this);
+    m_transactionContainer = new QScrollArea(this);
+    m_transactionContainer->setLayout(new QVBoxLayout(this));
     layout()->addWidget(m_transactionContainer);
 
     connect(this,&AccountWidget::customContextMenuRequested, this, &AccountWidget::on_AccountWidget_customContextMenuRequested);
@@ -36,7 +37,7 @@ void AccountWidget::addTransactionWidget(Transaction const& tr)
 void AccountWidget::createTransactionWidget(Transaction const& tr)
 {
     TransactionWidget * w = new TransactionWidget(m_transactionContainer);
-    m_transactionContainer->addWidget(w);
+    m_transactionContainer->layout()->addWidget(w);
     w->setValue(m_account,tr);
     reload();
 }

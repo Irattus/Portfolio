@@ -2,11 +2,11 @@
 #define ACCOUNTWIDGET_H
 
 #include <QGroupBox>
+#include <QScrollArea>
 #include <QList>
 #include <QMenu>
 #include <QAction>
 #include "Utilities/account.h"
-#include "widgetcontainer.h"
 #include "transactionwidget.h"
 #include "Dialogs/transactiondialog.h"
 
@@ -29,7 +29,7 @@ private slots:
     void on_AccountWidget_customContextMenuRequested(const QPoint &pos);
 private:
     std::shared_ptr<Account> m_account;
-    WidgetContainer * m_transactionContainer;
+    QScrollArea * m_transactionContainer;
     QMenu * m_menu;
     TransactionDialog * m_transactionDialog;
 

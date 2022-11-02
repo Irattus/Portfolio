@@ -1,12 +1,11 @@
 #ifndef OVERALLWIDGET_H
 #define OVERALLWIDGET_H
 #include <QScrollArea>
-#include "Widgets/widgetcontainer.h"
 #include "Dialogs/accountdialog.h"
 #include "Utilities/account.h"
 #include "Utilities/bank.h"
 
-class OverallWidget : public WidgetContainer
+class OverallWidget : public QScrollArea
 {
     Q_OBJECT
 

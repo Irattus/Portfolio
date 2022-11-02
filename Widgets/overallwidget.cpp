@@ -2,8 +2,9 @@
 #include "accountwidget.h"
 
 OverallWidget::OverallWidget(QWidget *parent) :
-    WidgetContainer(parent)
+    QScrollArea(parent)
 {
+    setLayout(new QVBoxLayout(this));
     m_accountDialog = new AccountDialog(this);
     m_menu = new QMenu(this);
     m_addAccount = new QAction("Add Account",m_menu);
@@ -34,7 +35,7 @@ void OverallWidget::createAccount(std::shared_ptr<Account> const& ac)
     AccountWidget * accountWidget = new AccountWidget(this);
     accountWidget->setAccount( ac );
     accountWidget->reload();
-    addWidget(accountWidget);
+    layout()->addWidget(accountWidget);
 
     QMenu * accountMenu = new QMenu(accountWidget);
 
@@ -51,7 +52,7 @@ void OverallWidget::createAccount(std::shared_ptr<Account> const& ac)
     [this,accountWidget,ac]()
         {
             m_bank->removeAccount(ac);
-            removeWidget(accountWidget);
+            layout()->removeWidget(accountWidget);
             accountWidget->deleteLater();
         }
     );
