@@ -9,7 +9,6 @@ AccountWidget::AccountWidget(QWidget *parent) :
     setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(this,&AccountWidget::customContextMenuRequested, this, &AccountWidget::on_AccountWidget_customContextMenuRequested);
-    setStyleSheet("background-color:blue;");
 
 }
 
