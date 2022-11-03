@@ -8,8 +8,10 @@ AccountWidget::AccountWidget(QWidget *parent) :
     m_transactionContainer = new QWidget(m_scrollArea);
     m_scrollArea->setWidgetResizable( true );
     m_scrollArea->setLayout(new QVBoxLayout(this));
+    m_scrollArea->setMinimumHeight(108);
     layout()->addWidget(m_scrollArea);
     m_transactionContainer->setLayout(new QVBoxLayout(this));
+    m_transactionContainer->layout()->setSpacing(1);
     m_scrollArea->setWidget(m_transactionContainer);
 
     connect(this,&AccountWidget::customContextMenuRequested, this, &AccountWidget::on_AccountWidget_customContextMenuRequested);
@@ -20,7 +22,10 @@ AccountWidget::AccountWidget(QWidget *parent) :
 
 void AccountWidget::setMenu(QMenu * menu)
 {
-    m_menu = menu;
+    menu->setTitle("Account");
+
+    m_menu = new QMenu(this);
+
     QAction * addTransaction = new QAction("Add Transaction",m_menu);
     connect(addTransaction,&QAction::triggered,m_transactionDialog,
     [this]()
@@ -29,6 +34,7 @@ void AccountWidget::setMenu(QMenu * menu)
         }
     );
     m_menu->addAction(addTransaction);
+    m_menu->addMenu(menu);
     setContextMenuPolicy(Qt::CustomContextMenu);
 }
 

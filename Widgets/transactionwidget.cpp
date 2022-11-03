@@ -7,7 +7,7 @@ TransactionWidget::TransactionWidget(QWidget * parent)
 
     m_amountLabel = new QLabel(this);
     layout()->addWidget(m_amountLabel);
-    layout()->addItem(new QSpacerItem(20,20));
+    layout()->addItem(new QSpacerItem(10,10));
     m_descriptionLabel = new QLabel(this);
     layout()->addWidget(m_descriptionLabel);
 }
