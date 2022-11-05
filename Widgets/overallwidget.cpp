@@ -1,10 +1,10 @@
 #include "overallwidget.h"
 #include "accountwidget.h"
+#include <QPushButton>
 
 OverallWidget::OverallWidget(QWidget *parent) :
     QScrollArea(parent)
 {
-    //setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents);
     setLayout(new QVBoxLayout(this));
     setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
     setWidgetResizable( true );
@@ -20,11 +20,16 @@ OverallWidget::OverallWidget(QWidget *parent) :
     connect(m_accountDialog,&AccountDialog::newAccount, this,&OverallWidget::addAccount);
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this,&OverallWidget::customContextMenuRequested,this,[this](QPoint const& pos){m_menu->exec(mapToGlobal(pos)); });
+
+    m_chartContainer = new ChartContainer(m_container);
+    m_container->layout()->addWidget(m_chartContainer);
+
 }
+
 
 void OverallWidget::setBank(std::shared_ptr<Bank> bank)
 {
-    m_bank = bank;
+    m_bank = m_chartContainer->setBank(bank);
     for(unsigned int i=0; i<m_bank->accounts();i++)
         createAccount(m_bank->getAccount(i));
 

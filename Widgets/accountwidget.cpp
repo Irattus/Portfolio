@@ -4,15 +4,10 @@ AccountWidget::AccountWidget(QWidget *parent) :
     QGroupBox(parent)
 {
     setLayout(new QVBoxLayout(this));
-    m_scrollArea = new QScrollArea(this);
-    m_transactionContainer = new QWidget(m_scrollArea);
-    m_scrollArea->setWidgetResizable( true );
-    m_scrollArea->setLayout(new QVBoxLayout(this));
-    m_scrollArea->setMinimumHeight(108);
-    layout()->addWidget(m_scrollArea);
+    m_transactionContainer = new QWidget(this);
+    layout()->addWidget(m_transactionContainer);
     m_transactionContainer->setLayout(new QVBoxLayout(this));
     m_transactionContainer->layout()->setSpacing(1);
-    m_scrollArea->setWidget(m_transactionContainer);
 
     connect(this,&AccountWidget::customContextMenuRequested, this, &AccountWidget::on_AccountWidget_customContextMenuRequested);
 

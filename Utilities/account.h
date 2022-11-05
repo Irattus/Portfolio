@@ -2,6 +2,7 @@
 #define ACCOUNT_H
 
 #include <QDate>
+#include <QObject>
 
 struct Transaction
 {

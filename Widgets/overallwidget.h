@@ -1,6 +1,7 @@
 #ifndef OVERALLWIDGET_H
 #define OVERALLWIDGET_H
 #include <QScrollArea>
+#include "chartcontainer.h"
 #include "Dialogs/accountdialog.h"
 #include "Utilities/account.h"
 #include "Utilities/bank.h"
@@ -19,12 +20,17 @@ public:
 
     inline std::shared_ptr<Bank> bank() const { return m_bank; }
 
+private slots:
 private:
-    std::shared_ptr<Bank> m_bank;
     QWidget * m_container;
+    ChartContainer * m_chartContainer;
+
+    std::shared_ptr<Bank> m_bank;
+
     QMenu * m_menu;
-    AccountDialog *  m_accountDialog;
     QAction * m_addAccount;
+
+    AccountDialog *  m_accountDialog;
 
 
 

@@ -12,6 +12,7 @@ SOURCES += \
     Utilities/account.cpp \
     Dialogs/accountdialog.cpp \
     Widgets/accountwidget.cpp \
+    Widgets/chartcontainer.cpp \
     Widgets/transactionwidget.cpp \
     main.cpp \
     mw.cpp \
@@ -23,6 +24,7 @@ HEADERS += \
     Utilities/bank.h \
     Dialogs/accountdialog.h \
     Widgets/accountwidget.h \
+    Widgets/chartcontainer.h \
     Widgets/transactionwidget.h \
     mw.h \
     Widgets/overallwidget.h \
