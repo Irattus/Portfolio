@@ -10,6 +10,10 @@ TransactionWidget::TransactionWidget(QWidget * parent)
     layout()->addItem(new QSpacerItem(10,10));
     m_descriptionLabel = new QLabel(this);
     layout()->addWidget(m_descriptionLabel);
+
+    setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(this,&TransactionWidget::customContextMenuRequested,this,[this](QPoint const& pos) { m_menu->exec(mapToGlobal(pos),nullptr); });
 }
 
 void TransactionWidget::setValue(std::shared_ptr<Account> const& ac,Transaction const& tr)
@@ -22,4 +26,14 @@ void TransactionWidget::setValue(std::shared_ptr<Account> const& ac,Transaction 
     m_amountLabel->setFont(QFont("Cambria",14,QFont::Bold));
     m_descriptionLabel->setText(tr.m_description);
     m_descriptionLabel->setFont(QFont("Cambria",10,QFont::Normal));
+}
+
+void TransactionWidget::setMenu(QMenu * menu)
+{
+    m_menu = new QMenu(this);
+    m_menu->addAction(menu->actions().at(0));
+    QAction * removeTransaction = new QAction("Remove Transaction",menu);
+    connect(removeTransaction,&QAction::triggered,this,&TransactionWidget::removeTransactionWidget);
+    m_menu->addAction(removeTransaction);
+    m_menu->addMenu(menu->actions().at(1)->menu());
 }

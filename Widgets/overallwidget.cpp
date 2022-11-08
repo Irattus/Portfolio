@@ -45,8 +45,7 @@ void OverallWidget::addAccount(std::shared_ptr<Account> const& ac)
 void OverallWidget::createAccount(std::shared_ptr<Account> const& ac)
 {
     AccountWidget * accountWidget = new AccountWidget(this);
-    accountWidget->setAccount( ac );
-    accountWidget->reload();
+
     m_container->layout()->addWidget(accountWidget);
 
     QMenu * accountMenu = new QMenu(accountWidget);
@@ -73,6 +72,9 @@ void OverallWidget::createAccount(std::shared_ptr<Account> const& ac)
     accountMenu->addAction( removeAccount );
 
     accountWidget->setMenu(accountMenu);
+
+    accountWidget->setAccount( ac );
+    accountWidget->reload();
 
     connect(accountWidget,&AccountWidget::reloadChart,m_chartContainer,&ChartContainer::reload);
 

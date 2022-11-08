@@ -48,6 +48,16 @@ void AccountWidget::createTransactionWidget(Transaction const& tr)
     TransactionWidget * w = new TransactionWidget(m_transactionContainer);
     m_transactionContainer->layout()->addWidget(w);
     w->setValue(m_account,tr);
+    w->setMenu(m_menu);
+    connect(w,&TransactionWidget::removeTransactionWidget,this,
+    [this,w,tr]()
+        {
+            m_account->removeTransaction(tr);
+            m_transactionContainer->layout()->removeWidget(w);
+            w->deleteLater();
+            reload();
+        }
+    );
     reload();
 }
 
