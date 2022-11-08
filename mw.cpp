@@ -1,42 +1,35 @@
 #include "mw.h"
 #define FILE "bank.dll"
 
+
+
 MW::MW(QWidget *parent)
-    : QMainWindow(parent),
-      m_dialog(new AccountDialog(this))
+    : QMainWindow(parent)
 {
     ui.setupUi(this);
     setWindowTitle("Portfolio");
+    ui.yourMoney->setBank(m_bank = load());
 
-    connect(m_dialog,&AccountDialog::NewAccount,this,
-            [this](std::shared_ptr<Account> ac){
-        m_bank->AddAccount( std::move(ac) );
-        ui.yourMoney->AddAccount(m_bank->LastAccount());
-    });
-
-    connect(ui.actionNewAccount,&QAction::triggered,m_dialog,&AccountDialog::CreateAccount);
-
-    m_bank = std::make_shared<Bank>(Bank());
-    ui.yourMoney->setBank(m_bank);
-    load();
 }
 
-void MW::load()
+std::shared_ptr<Bank> MW::load()
 {
     QFile file = QFile(FILE);
     file.open(QIODevice::ReadOnly);
-    ui.yourMoney->Load(QString::fromUtf8(file.readAll()));
+    QDataStream in(&file);
+    Bank b;
+    in>>b;
     file.close();
+    return std::make_shared<Bank>(b);
 }
 
 void MW::save()
 {
     m_bank->OrderAccounts();
-    std::cout<<(*m_bank.get());
     QFile file = QFile(FILE);
     file.open(QIODevice::WriteOnly);
-    QTextStream out(&file);
-    out<<(*m_bank.get());
+    QDataStream out(&file);
+    out<<m_bank;
     file.close();
 
 }
@@ -44,10 +37,5 @@ void MW::save()
 MW::~MW()
 {
     save();
-}
-
-void MW::on_actionRef_triggered()
-{
-    m_bank->Refs();
 }
 

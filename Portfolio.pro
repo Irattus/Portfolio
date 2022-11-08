@@ -10,36 +10,30 @@ CONFIG += c++17
 
 SOURCES += \
     Utilities/account.cpp \
-    Widgets/accountwidgetcontainer.cpp \
-    Utilities/transaction.cpp \
     Dialogs/accountdialog.cpp \
     Widgets/accountwidget.cpp \
+    Widgets/chartcontainer.cpp \
+    Widgets/transactionwidget.cpp \
     main.cpp \
     mw.cpp \
     Widgets/overallwidget.cpp \
-    Dialogs/transactiondialog.cpp \
-    Widgets/transactionwidget.cpp
+    Dialogs/transactiondialog.cpp
 
 HEADERS += \
     Utilities/account.h \
-    Widgets/accountwidgetcontainer.h \
     Utilities/bank.h \
-    Utilities/transaction.h \
     Dialogs/accountdialog.h \
     Widgets/accountwidget.h \
+    Widgets/chartcontainer.h \
+    Widgets/transactionwidget.h \
     mw.h \
     Widgets/overallwidget.h \
-    Dialogs/transactiondialog.h \
-    Widgets/transactionwidget.h
+    Dialogs/transactiondialog.h
 
 FORMS += \
-    Widgets/accountwidgetcontainer.ui \
     Dialogs/accountdialog.ui \
-    Widgets/accountwidget.ui \
     mw.ui \
-    Widgets/overallwidget.ui \
-    Dialogs/transactiondialog.ui \
-    Widgets/transactionwidget.ui
+    Dialogs/transactiondialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

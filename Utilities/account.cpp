@@ -1,8 +1,34 @@
 #include "account.h"
 
-Account::Account(QString&& name)
+
+QDataStream &operator<<(QDataStream & out, const Transaction & tr)
+{
+    out<<tr.m_time;
+    out<<tr.m_value;
+    out<<tr.m_description;
+    return out;
+}
+
+QDataStream &operator>>(QDataStream &in , Transaction &tr)
+{
+    in>>tr.m_time;
+    in>>tr.m_value;
+    in>>tr.m_description;
+    return in;
+}
+
+bool operator==(const Transaction& lhs, const Transaction& rhs){
+    return (lhs.m_time == rhs.m_time) && (lhs.m_value == rhs.m_value) && (lhs.m_description == rhs.m_description);
+}
+
+bool operator==(const Account& lhs, const Account& rhs)
+{
+    return lhs.name() == rhs.name();
+}
+
+Account::Account(QString const& name)
     :
-      m_name(std::move(name))
+      m_name(name)
 {
 
 }
@@ -16,70 +42,54 @@ Account::Account()
 
 void Account::OrderTransactions()
 {
-    bool ordered = false;
-    std::shared_ptr<Transaction> tmp;
-    while(!ordered)
-    for(unsigned int i=0; i<Transactions()-1;i++)
-    {
-        ordered = true;
-        if(m_transactions[i]->date() < m_transactions[i+1]->date()){
-            tmp = m_transactions[i+1];
-            m_transactions[i+1] = m_transactions[i];
-            m_transactions[i] = tmp;
-            ordered = false;
-        }
-    }
+    std::sort(m_transactions.begin(),m_transactions.end(),[](Transaction a,Transaction b) -> bool
+    { return a.m_time<b.m_time;});
 }
 
-void Account::SetName(QString&& name)
+void Account::setName(QString const& name)
 {
-    m_name = std::move(name);
+    m_name = name;
 }
 
-void Account::AddTransaction(std::shared_ptr<Transaction> && tr)
-{
-    m_transactions.push_back(std::move(tr));
-}
-
-void Account::AddTransaction(std::shared_ptr<Transaction> const& tr)
+void Account::addTransaction(Transaction const& tr)
 {
     m_transactions.push_back(tr);
 }
 
-void Account::RemoveTransaction(std::shared_ptr<Transaction> && tr)
+void Account::removeTransaction(Transaction const& tr)
 {
-    m_transactions.removeOne(std::move(tr));
+    m_transactions.removeOne(tr);
 }
 
-void Account::RemoveAt(unsigned int index)
+void Account::removeAt(unsigned int index)
 {
     m_transactions.removeAt(index);
 }
 
-std::shared_ptr<Transaction> Account::GetTransaction(unsigned int index) const
+Transaction Account::getTransaction(unsigned int index) const
 {
     return m_transactions.at(index);
 }
 
-std::shared_ptr<Transaction> Account::LastTransaction() const
+Transaction Account::lastTransaction() const
 {
     return m_transactions.last();
 }
 
-QString Account::Name() const
+QString Account::name() const
 {
     return m_name;
 }
 
-qreal Account::Total() const
+qreal Account::total() const
 {
     qreal total = 0;
-    for(auto const& it : m_transactions)
-        total += it->value();
+    for(int i= 0; i< m_transactions.size(); i++)
+        total += m_transactions.at(i).m_value;
     return total;
 }
 
-QString Account::TotalS() const
+QString Account::totalS() const
 {
-    return QString::number(Total(),'f',2);
+    return QString::number(total(),'f',2);
 }

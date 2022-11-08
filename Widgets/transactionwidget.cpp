@@ -1,58 +1,39 @@
 #include "transactionwidget.h"
 
-TransactionWidget::TransactionWidget(QWidget *parent) :
-    QFrame(parent),
-    m_menu(new QMenu(this)),
-    m_modifyTransAction(new QAction("Modify Transaction",m_menu)),
-    m_removeTransAction(new QAction("Remove Transaction",m_menu))
+TransactionWidget::TransactionWidget(QWidget * parent)
+    : QGroupBox(parent)
 {
-    ui.setupUi(this);
-}
+    setLayout(new QVBoxLayout(this));
 
-void TransactionWidget::setAddAction(QAction * ac)
-{
-    m_addTransAction = ac;
+    m_amountLabel = new QLabel(this);
+    layout()->addWidget(m_amountLabel);
+    layout()->addItem(new QSpacerItem(10,10));
+    m_descriptionLabel = new QLabel(this);
+    layout()->addWidget(m_descriptionLabel);
+
     setContextMenuPolicy(Qt::CustomContextMenu);
-    m_menu->addAction(m_addTransAction);
-    m_menu->addAction(m_modifyTransAction);
-    m_menu->addAction(m_removeTransAction);
-    connect(m_modifyTransAction,&QAction::triggered,this,&TransactionWidget::on_modifyButton_clicked);
-    connect(m_removeTransAction,&QAction::triggered,this,&TransactionWidget::on_deleteButton_clicked);
+
+    connect(this,&TransactionWidget::customContextMenuRequested,this,[this](QPoint const& pos) { m_menu->exec(mapToGlobal(pos),nullptr); });
 }
 
-
-void TransactionWidget::setTransaction(QString && name,std::shared_ptr<Transaction>&& tr)
+void TransactionWidget::setValue(std::shared_ptr<Account> const& ac,Transaction const& tr)
 {
-    m_accountName = std::move(name);
-    m_transaction = std::move(tr);
-    reload();
+    m_account = ac;
+    setTitle(tr.m_time.toString("dd.MM.yy"));
+    setFont(QFont("Cambria",14,QFont::Normal));
+    m_amountLabel->setStyleSheet(tr.m_value > 0 ? "color:green" : "color:red");
+    m_amountLabel->setText(QString::number(tr.m_value,'f',2));
+    m_amountLabel->setFont(QFont("Cambria",14,QFont::Bold));
+    m_descriptionLabel->setText(tr.m_description);
+    m_descriptionLabel->setFont(QFont("Cambria",10,QFont::Normal));
 }
 
-void TransactionWidget::reload()
+void TransactionWidget::setMenu(QMenu * menu)
 {
-    ui.description->setText(m_transaction->description());
-    ui.date->setText(m_transaction->date().toString("dd.MM.yyyy"));
-    ui.amount->setStyleSheet(
-                m_transaction->value() > 0 ?
-                  "color: green" : "color: red" );
-    ui.amount->setFont(QFont("Cambria",12,QFont::Bold));
-    ui.amount->setText(m_transaction->valueS());
+    m_menu = new QMenu(this);
+    m_menu->addAction(menu->actions().at(0));
+    QAction * removeTransaction = new QAction("Remove Transaction",menu);
+    connect(removeTransaction,&QAction::triggered,this,&TransactionWidget::removeTransactionWidget);
+    m_menu->addAction(removeTransaction);
+    m_menu->addMenu(menu->actions().at(1)->menu());
 }
-
-void TransactionWidget::on_modifyButton_clicked()
-{
-    emit ModifyTransaction(m_accountName,m_transaction);
-}
-
-
-void TransactionWidget::on_deleteButton_clicked()
-{
-    emit RemoveTransaction(this);
-}
-
-
-void TransactionWidget::on_TransactionWidget_customContextMenuRequested(const QPoint &pos)
-{
-    m_menu->exec(mapToGlobal(pos),nullptr);
-}
-

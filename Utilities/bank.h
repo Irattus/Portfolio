@@ -6,60 +6,57 @@
 class Bank
 {
 public:
-    inline void AddAccount(std::shared_ptr<Account> &&ac) { m_bank.push_back(std::move(ac)); }
+    inline void addAccount(std::shared_ptr<Account> const& ac) { m_bank.append(ac); }
 
-    inline void RemoveAccount(std::shared_ptr<Account> const&ac) { m_bank.removeOne( std::move(ac) ); }
+    inline void removeAccount(std::shared_ptr<Account> const& ac) { m_bank.removeOne( ac ); }
 
-    inline unsigned int Accounts() const { return m_bank.size(); }
+    inline unsigned int accounts() const { return m_bank.size(); }
 
-    inline std::shared_ptr<Account> GetAccount(unsigned int n) const { return m_bank[n]; }
+    inline std::shared_ptr<Account> getAccount(unsigned int n) const { return m_bank[n]; }
 
-    inline std::shared_ptr<Account> LastAccount() const { return m_bank.last(); }
+    inline std::shared_ptr<Account> lastAccount() const { return m_bank.last(); }
 
-    inline void Refs() const
-    {
-        for(auto const& it: m_bank){
-            qDebug()<<"Account "<<it->Name()<<":"<<it.use_count();
-            it->Refs();
-        }
-    }
+    inline QVector<std::shared_ptr<Account>> allAccounts() const { return m_bank; }
 
     inline void OrderAccounts()
     {
-        bool ordered = false;
-        std::shared_ptr<Account> tmp;
-        for(auto const& it: m_bank)
+        for(std::shared_ptr<Account> it: m_bank)
             it->OrderTransactions();
-        while(!ordered)
-        for(unsigned int i=0; i<Accounts()-1;i++)
+        std::sort(m_bank.begin(),m_bank.end(),[](std::shared_ptr<Account> a,std::shared_ptr<Account> b) -> bool
         {
-            ordered = true;
-
-            if( m_bank[i]->LastTransaction()->date() < m_bank[i+1]->LastTransaction()->date()){
-                tmp = m_bank[i+1];
-                m_bank[i+1] = m_bank[i];
-                m_bank[i] = tmp;
-                ordered = false;
-            }
-        }
+            if(!a->transactions())
+                return false;
+            if(!b->transactions())
+                return true;
+            return (a->lastTransaction().m_time<b->lastTransaction().m_time);
+        });
     }
 
-    template<typename T = QTextStream>
-    friend T& operator<< (T& strm,
+    friend QDataStream& operator<< (QDataStream& strm,
     Bank const& s){
-    s.print(strm);
+        strm<<s.m_bank;
+    return strm;
+    }
+
+    friend QDataStream& operator>> (QDataStream& strm,
+    Bank & s){
+        QVector<std::shared_ptr<Account>> tmp;
+        strm>>tmp;
+        s.m_bank = tmp;
+    return strm;
+    }
+
+    friend QDataStream& operator<< (QDataStream& strm,
+    std::shared_ptr<Bank> const& s){
+        strm<<s->m_bank;
     return strm;
     }
 
     Bank() = default;
 private:
     QVector<std::shared_ptr<Account>> m_bank;
-
-    template<typename T = QTextStream>
-    inline void print (T& strm) const{
-        for(auto const& it: m_bank)
-            strm<<'\n'<<*it.get()<<'\n';
-    }
 };
+
+
 
 #endif // BANK_H

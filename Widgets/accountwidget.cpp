@@ -1,71 +1,72 @@
 #include "accountwidget.h"
 
 AccountWidget::AccountWidget(QWidget *parent) :
-    QGroupBox(parent),
-    m_dialogTransaction(new TransactionDialog(this)),
-    m_dialogAccount(new AccountDialog(this)),
-    m_menu(new QMenu(this)),
-    m_addTransAction(new QAction("Add Transaction",m_menu)),
-    m_modifyAccount(new QAction("Modify Account",m_menu))
+    QGroupBox(parent)
 {
-    ui.setupUi(this);
+    setLayout(new QVBoxLayout(this));
+    m_transactionContainer = new QWidget(this);
+    m_chart = new ChartContainer(this);
+    layout()->addWidget(m_chart);
+    layout()->addWidget(m_transactionContainer);
+    m_transactionContainer->setLayout(new QVBoxLayout(this));
+    m_transactionContainer->layout()->setSpacing(1);
+
+
+
+    connect(this,&AccountWidget::customContextMenuRequested, this, &AccountWidget::on_AccountWidget_customContextMenuRequested);
+
+    m_transactionDialog = new TransactionDialog(this);
+    connect(m_transactionDialog,&TransactionDialog::newTransaction,this,&AccountWidget::addTransactionWidget);
+}
+
+void AccountWidget::setMenu(QMenu * menu)
+{
+    menu->setTitle("Account");
+
+    m_menu = new QMenu(this);
+
+    QAction * addTransaction = new QAction("Add Transaction",m_menu);
+    connect(addTransaction,&QAction::triggered,m_transactionDialog,
+    [this]()
+        {
+            m_transactionDialog->createNew(m_account);
+        }
+    );
+    m_menu->addAction(addTransaction);
+    m_menu->addMenu(menu);
     setContextMenuPolicy(Qt::CustomContextMenu);
-    m_menu->addAction(m_addTransAction);
-    m_menu->addAction(m_modifyAccount);
-    connect(m_addTransAction,&QAction::triggered,m_dialogTransaction,[this](){m_dialogTransaction->createNew(m_account->Name());});
-    connect(m_dialogTransaction,&TransactionDialog::NewTransaction, this,&AccountWidget::AddTransAction);
-    connect(m_dialogTransaction,&TransactionDialog::ModifyTransaction,this,&AccountWidget::ModifyTransactions);
-    connect(m_modifyAccount,&QAction::triggered,this,[this](){m_dialogAccount->ModifyAccount(m_account->Name());});
-    connect(m_dialogAccount,&AccountDialog::ChangeAccount,this,
-    [this](QString name)
-    {
-        m_account->SetName(std::move(name));
-        reload();
-    });
 }
 
-
-void AccountWidget::AddTransAction(std::shared_ptr<Transaction> const& tr)
+void AccountWidget::addTransactionWidget(Transaction const& tr)
 {
-    m_account->AddTransaction( std::move(tr) );
-    AddTransActionWidget( m_account->LastTransaction() );
+    m_account->addTransaction(tr);
+    createTransactionWidget(tr);
 }
 
-void AccountWidget::AddTransActionWidget(std::shared_ptr<Transaction> && tr)
+void AccountWidget::createTransactionWidget(Transaction const& tr)
 {
-    TransactionWidget * tmp = new TransactionWidget(ui.Container);
-    tmp->setTransaction(m_account->Name(),std::move(tr));
-    connect(tmp,&TransactionWidget::RemoveTransaction,this,&AccountWidget::RemoveTransaction);
-    connect(tmp,&TransactionWidget::ModifyTransaction,m_dialogTransaction,&TransactionDialog::modify);
-    tmp->setAddAction(m_addTransAction);
-    ui.vLayout->addWidget(tmp);
-    m_widgets.append(tmp);
+    TransactionWidget * w = new TransactionWidget(m_transactionContainer);
+    m_transactionContainer->layout()->addWidget(w);
+    w->setValue(m_account,tr);
+    w->setMenu(m_menu);
+    connect(w,&TransactionWidget::removeTransactionWidget,this,
+    [this,w,tr]()
+        {
+            m_account->removeTransaction(tr);
+            m_transactionContainer->layout()->removeWidget(w);
+            w->deleteLater();
+            reload();
+        }
+    );
     reload();
 }
 
-void AccountWidget::ModifyTransactions(std::shared_ptr<Transaction> const& tr)
+void AccountWidget::setAccount(std::shared_ptr<Account> const& a)
 {
-    for(TransactionWidget * it: m_widgets)
-        if(it->transaction()==tr)
-            it->reload();
-    reload();
-}
-
-
-void AccountWidget::RemoveTransaction(TransactionWidget* widget)
-{
-    m_account->RemoveTransaction(widget->transaction());
-    ui.vLayout->removeWidget(widget);
-    m_widgets.removeOne(widget);
-    delete widget;
-    reload();
-}
-
-void AccountWidget::SetAccount(std::shared_ptr<Account> &&a)
-{
-    m_account = std::move(a);
-    for(unsigned int i=0; i < m_account->Transactions(); i++)
-        AddTransActionWidget(m_account->GetTransaction(i));
+    m_account = a;
+    m_chart->setAccount(m_account);
+    for(unsigned int i=0; i < m_account->transactions(); i++)
+        createTransactionWidget(m_account->getTransaction(i));
 }
 
 void AccountWidget::on_AccountWidget_customContextMenuRequested(const QPoint &pos)

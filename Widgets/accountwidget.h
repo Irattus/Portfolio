@@ -1,14 +1,15 @@
 #ifndef ACCOUNTWIDGET_H
 #define ACCOUNTWIDGET_H
 
-#include "ui_accountwidget.h"
-#include "Utilities/account.h"
+#include <QGroupBox>
+#include <QScrollArea>
 #include <QList>
 #include <QMenu>
 #include <QAction>
+#include "Utilities/account.h"
 #include "transactionwidget.h"
 #include "Dialogs/transactiondialog.h"
-#include "Dialogs/accountdialog.h"
+#include "chartcontainer.h"
 
 class AccountWidget : public QGroupBox
 {
@@ -16,28 +17,33 @@ class AccountWidget : public QGroupBox
 
 public:
     explicit AccountWidget(QWidget *parent = nullptr);
-    void SetAccount(std::shared_ptr<Account> && a);
-    void AddTransAction(std::shared_ptr<Transaction> const&tr);
-    void AddTransActionWidget(std::shared_ptr<Transaction> &&tr);
-    void RemoveTransaction(TransactionWidget*);
+    void setMenu(QMenu * menu);
+    void setAccount(std::shared_ptr<Account> const& a);
+    void addTransactionWidget(Transaction const&tr);
+    void createTransactionWidget(Transaction const&tr);
 
-    inline void SetAddAction(QAction * ac) { m_menu->addAction(ac); }
-    inline void reload() { setTitle(m_account->Name()+": "+m_account->TotalS()); }
+
 
     inline std::shared_ptr<Account> account() const { return m_account; }
 
+    inline void reload()
+    {
+      setTitle(m_account->name()+": "+m_account->totalS());
+      m_chart->reload();
+      emit reloadChart();
+    }
+
 private slots:
-    void ModifyTransactions(std::shared_ptr<Transaction> const&);
     void on_AccountWidget_customContextMenuRequested(const QPoint &pos);
 private:
-    Ui::AccountWidget ui;
     std::shared_ptr<Account> m_account;
-    QList<TransactionWidget*> m_widgets;
-    TransactionDialog * m_dialogTransaction;
-    AccountDialog * m_dialogAccount;
+    ChartContainer * m_chart;
+    QWidget * m_transactionContainer;
     QMenu * m_menu;
-    QAction * m_addTransAction;
-    QAction * m_modifyAccount;
+    TransactionDialog * m_transactionDialog;
+    //QAction * m_modifyAccount;
+signals:
+    void reloadChart();
 };
 
 #endif // ACCOUNTWIDGET_H

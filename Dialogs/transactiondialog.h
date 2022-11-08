@@ -6,20 +6,20 @@
 class TransactionDialog : public QDialog
 {
     Q_OBJECT
-
+//Non tocca lo shared ptr qui , altrimenti non ci capisco più na sega
 public:
     explicit TransactionDialog(QWidget *parent = nullptr);
-    void createNew(QString&& name);
-    void modify(QString const& name,std::shared_ptr<Transaction> const&);
+    void createNew(std::shared_ptr<Account> const&  ac);
+    void modify(std::shared_ptr<Account> const&  ac,Transaction const&);
 signals:
-    void NewTransaction(std::shared_ptr<Transaction> const&);
-    void ModifyTransaction(std::shared_ptr<Transaction> const&);
+    void newTransaction(Transaction const&);
+    void modifyTransaction(std::shared_ptr<Account> const&,Transaction const&);
 private slots:
     void on_buttonBox_accepted();
 
 private:
-    std::shared_ptr<Transaction> m_transaction;
     bool m_status;
+    std::shared_ptr<Account> m_account;
     Ui::TransactionDialog ui;
 };
 

@@ -28,22 +28,13 @@ public:
 
 
 private:
-    QDate m_time;
-    qreal m_value;
-    QString m_description;
+
     template<typename T>
     inline void print(T &strm) const
     {
-        strm << QString::number(m_time.day()).toStdString().c_str()<< "-";
-        strm << QString::number(m_time.month()).toStdString().c_str()<< "-";
-        strm << QString::number(m_time.year()).toStdString().c_str()<< ":";
-        strm << ( m_value > 0 ? "+": "");
-        strm << m_value << ":";
-        QStringList lst = m_description.split('\n');
-        for(QString const& it: lst){
-            strm<<it.toStdString().c_str();
-        }
-        strm<<'\n';
+        strm << m_time;
+        strm << m_value;
+        strm << m_description;
     }
 
 };
