@@ -74,5 +74,7 @@ void OverallWidget::createAccount(std::shared_ptr<Account> const& ac)
 
     accountWidget->setMenu(accountMenu);
 
+    connect(accountWidget,&AccountWidget::reloadChart,m_chartContainer,&ChartContainer::reload);
+
 }
 

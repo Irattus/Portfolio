@@ -22,9 +22,16 @@ public:
     void addTransactionWidget(Transaction const&tr);
     void createTransactionWidget(Transaction const&tr);
 
-    inline void reload() { setTitle(m_account->name()+": "+m_account->totalS()); m_chart->reload(); }
+
 
     inline std::shared_ptr<Account> account() const { return m_account; }
+
+    inline void reload()
+    {
+      setTitle(m_account->name()+": "+m_account->totalS());
+      m_chart->reload();
+      emit reloadChart();
+    }
 
 private slots:
     void on_AccountWidget_customContextMenuRequested(const QPoint &pos);
@@ -34,12 +41,9 @@ private:
     QWidget * m_transactionContainer;
     QMenu * m_menu;
     TransactionDialog * m_transactionDialog;
-
-
-    //TransactionDialog * m_dialogTransaction;
-
-    //QAction * m_addTransAction;
     //QAction * m_modifyAccount;
+signals:
+    void reloadChart();
 };
 
 #endif // ACCOUNTWIDGET_H

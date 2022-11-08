@@ -16,9 +16,20 @@ BaseChartContainer::BaseChartContainer(QWidget *parent)
 void TimeChart::setup(std::shared_ptr<Account> ac)
 {
     ac->OrderTransactions();
+    double accountValue = 0;
+    QLineSeries * timeSeries = new QLineSeries;
 
-    QLineSeries * timeSeries = getLineSeries(ac);
+    for( unsigned int j = 0 ; j < ac->transactions(); j++){
+        Transaction tempT = ac->getTransaction(j);
+        QDateTime time = QDateTime::currentDateTime();
+        time.setDate(tempT.m_time);
+        accountValue += tempT.m_value;
+        timeSeries->append(time.toSecsSinceEpoch(),accountValue);
+
+    }
+
     addSeries(timeSeries);
+
 
     QDateTimeAxis *axisX = new QDateTimeAxis;
     axisX->setTickCount(10);
@@ -30,30 +41,17 @@ void TimeChart::setup(std::shared_ptr<Account> ac)
 
     QValueAxis *axisY = new QValueAxis;
     axisY->setLabelFormat("%i");
+
     addAxis(axisY, Qt::AlignLeft);
     timeSeries->attachAxis(axisY);
-}
-
-QLineSeries * TimeChart::getLineSeries(std::shared_ptr<Account> ac)
-{
-
-    double accountValue = 0;
-    QLineSeries * Timeseries = new QLineSeries();
-    for( unsigned int j = 0 ; j < ac->transactions(); j++){
-        Transaction tempT = ac->getTransaction(j);
-        QDateTime time = QDateTime::currentDateTime();
-        time.setDate(tempT.m_time);
-        accountValue += tempT.m_value;
-        Timeseries->append(time.toSecsSinceEpoch(),accountValue);
-
-    }
-    return Timeseries;
 }
 
 
 void PieChart::setup(QVector<std::shared_ptr<Account>> listAcc)
 {
-    QPieSeries * pieSeries = getPieSeries(listAcc);
+    QPieSeries * pieSeries = new QPieSeries;
+    for( unsigned int i=0; i < listAcc.size(); ++i )
+         pieSeries->append(QString(listAcc[i]->name() + ": "+listAcc[i]->totalS()),listAcc[i]->total());
     addSeries(pieSeries);
 
     if(!pieSeries->count())
@@ -62,14 +60,6 @@ void PieChart::setup(QVector<std::shared_ptr<Account>> listAcc)
     slice->setExploded();
     slice->setLabelVisible();
 
-}
-
-QPieSeries * PieChart::getPieSeries(QVector<std::shared_ptr<Account>> listAcc)
-{
-   QPieSeries * series = new QPieSeries;
-   for( unsigned int i=0; i < listAcc.size(); ++i )
-        series->append(QString(listAcc[i]->name() + ": "+listAcc[i]->totalS()),listAcc[i]->total());
-   return series;
 }
 
 void ChartContainer::reload(){

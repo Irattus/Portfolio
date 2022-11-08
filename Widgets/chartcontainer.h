@@ -28,11 +28,10 @@ public:
     {
         legend()->hide();
     }
-
-    inline void setup(QVector<std::shared_ptr<Account>>) {}
     void setup(std::shared_ptr<Account> ac);
 private:
-    QLineSeries * getLineSeries(std::shared_ptr<Account> ac);
+    inline void setup(QVector<std::shared_ptr<Account>>) {}
+
 
 };
 
@@ -41,10 +40,10 @@ class PieChart : public BaseChart
 public:
     PieChart(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = Qt::WindowFlags()) : BaseChart(parent,wFlags)
     {}
-    inline void setup(std::shared_ptr<Account>) {}
     void setup(QVector<std::shared_ptr<Account>> listAcc);
 private:
-     QPieSeries * getPieSeries(QVector<std::shared_ptr<Account>> listAcc);
+    inline void setup(std::shared_ptr<Account>) {}
+
 };
 
 class BaseChartContainer : public QWidget
