@@ -28,6 +28,8 @@ public:
     void OrderTransactions();
 
     void addTransaction(Transaction const& tr);
+    inline void appendTransaction(QVector<Transaction> const& tr) { m_transactions.append(tr); }
+    inline QVector<Transaction> allTransactions() const { return m_transactions; }
     void modifyTransaction(Transaction const& source, Transaction const& dest);
     void removeTransaction(Transaction const&tr);
     void removeAt(unsigned int);
