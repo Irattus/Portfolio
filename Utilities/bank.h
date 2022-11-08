@@ -16,6 +16,8 @@ public:
 
     inline std::shared_ptr<Account> lastAccount() const { return m_bank.last(); }
 
+    inline QVector<std::shared_ptr<Account>> allAccounts() const { return m_bank; }
+
     inline void OrderAccounts()
     {
         for(std::shared_ptr<Account> it: m_bank)

@@ -5,9 +5,13 @@ AccountWidget::AccountWidget(QWidget *parent) :
 {
     setLayout(new QVBoxLayout(this));
     m_transactionContainer = new QWidget(this);
+    m_chart = new ChartContainer(this);
+    layout()->addWidget(m_chart);
     layout()->addWidget(m_transactionContainer);
     m_transactionContainer->setLayout(new QVBoxLayout(this));
     m_transactionContainer->layout()->setSpacing(1);
+
+
 
     connect(this,&AccountWidget::customContextMenuRequested, this, &AccountWidget::on_AccountWidget_customContextMenuRequested);
 
@@ -50,6 +54,7 @@ void AccountWidget::createTransactionWidget(Transaction const& tr)
 void AccountWidget::setAccount(std::shared_ptr<Account> const& a)
 {
     m_account = a;
+    m_chart->setAccount(m_account);
     for(unsigned int i=0; i < m_account->transactions(); i++)
         createTransactionWidget(m_account->getTransaction(i));
 }

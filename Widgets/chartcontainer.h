@@ -22,25 +22,37 @@ public:
 protected:
 
     std::shared_ptr<Bank> m_bank;
+    std::shared_ptr<Account> m_account;
     QChartView * m_chartView;
 
 
 };
 
-
-
-
-class TimeChart : public QChart
+class BaseChart : public QChart
 {
 public:
-    TimeChart(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = Qt::WindowFlags()) : QChart(parent,wFlags)
+    BaseChart(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = Qt::WindowFlags()) : QChart(parent,wFlags)
+    {
+
+    }
+
+    virtual void setup(std::shared_ptr<Account>) = 0;
+    virtual void setup(QVector<std::shared_ptr<Account>>) = 0;
+};
+
+
+class TimeChart : public BaseChart
+{
+public:
+    TimeChart(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = Qt::WindowFlags()) : BaseChart(parent,wFlags)
     {
         legend()->hide();
     }
 
-    inline void setup(Account ac)
+    inline void setup(QVector<std::shared_ptr<Account>>) {}
+    inline void setup(std::shared_ptr<Account> ac)
     {
-        ac.OrderTransactions();
+        ac->OrderTransactions();
 
         QLineSeries * timeSeries = getLineSeries(ac);
         addSeries(timeSeries);
@@ -60,13 +72,13 @@ public:
     }
 private:
 
-    inline QLineSeries * getLineSeries(Account ac)
+    inline QLineSeries * getLineSeries(std::shared_ptr<Account> ac)
     {
 
         double accountValue = 0;
         QLineSeries * Timeseries = new QLineSeries();
-        for( unsigned int j = 0 ; j < ac.transactions(); j++){
-            Transaction tempT = ac.getTransaction(j);
+        for( unsigned int j = 0 ; j < ac->transactions(); j++){
+            Transaction tempT = ac->getTransaction(j);
             QDateTime time = QDateTime::currentDateTime();
             time.setDate(tempT.m_time);
             accountValue += tempT.m_value;
@@ -79,15 +91,15 @@ private:
 
 };
 
-class PieChart : public QChart
+class PieChart : public BaseChart
 {
 public:
-    PieChart(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = Qt::WindowFlags()) : QChart(parent,wFlags)
+    PieChart(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = Qt::WindowFlags()) : BaseChart(parent,wFlags)
     {
 
     }
-
-    inline void setup(QVector<Account> listAcc)
+    inline void setup(std::shared_ptr<Account>) {}
+    inline void setup(QVector<std::shared_ptr<Account>> listAcc)
     {
         QPieSeries * pieSeries = getPieSeries(listAcc);
         addSeries(pieSeries);
@@ -101,45 +113,43 @@ public:
     }
 private:
 
-    inline QPieSeries * getPieSeries(QVector<Account> listAcc)
+    inline QPieSeries * getPieSeries(QVector<std::shared_ptr<Account>> listAcc)
     {
         QPieSeries * series = new QPieSeries;
         for( unsigned int i=0; i < listAcc.size(); ++i )
-             series->append(QString(listAcc[i].name() + ": "+listAcc[i].totalS()),listAcc[i].total());
+             series->append(QString(listAcc[i]->name() + ": "+listAcc[i]->totalS()),listAcc[i]->total());
         return series;
      }
 
 
 };
 
-enum ChartType
-{
-    C_PIE,
-    C_DATE,
-};
-
-template <typename T> class ChartContainer;
-
-template<typename T>
 class ChartContainer : public BaseChartContainer
 {
 public:
     explicit ChartContainer(QWidget *parent = nullptr) : BaseChartContainer(parent)  {}
     inline std::shared_ptr<Bank> setBank(std::shared_ptr<Bank> bank) { m_bank = bank; reload(); return m_bank; }
+    inline std::shared_ptr<Account> setAccount(std::shared_ptr<Account> account)
+    { m_account = account; reload(); return m_account; }
 
     inline void reload(){
+        if(m_bank){
+            m_chart = new PieChart();
+            m_chart->setup(m_bank->allAccounts());
+        }
+        if(m_account){
+            m_chart = new TimeChart();
+            m_chart->setup(m_account);
+        }
+        m_chartView->setChart(m_chart);
+
 
     }
 private:
+    BaseChart * m_chart;
 
 
 
 };
-
-
-
-
-
-
 
 #endif // CHARTCONTAINER_H

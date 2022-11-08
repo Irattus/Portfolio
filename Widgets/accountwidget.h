@@ -9,6 +9,7 @@
 #include "Utilities/account.h"
 #include "transactionwidget.h"
 #include "Dialogs/transactiondialog.h"
+#include "chartcontainer.h"
 
 class AccountWidget : public QGroupBox
 {
@@ -21,7 +22,7 @@ public:
     void addTransactionWidget(Transaction const&tr);
     void createTransactionWidget(Transaction const&tr);
 
-    inline void reload() { setTitle(m_account->name()+": "+m_account->totalS()); }
+    inline void reload() { setTitle(m_account->name()+": "+m_account->totalS()); m_chart->reload(); }
 
     inline std::shared_ptr<Account> account() const { return m_account; }
 
@@ -29,7 +30,7 @@ private slots:
     void on_AccountWidget_customContextMenuRequested(const QPoint &pos);
 private:
     std::shared_ptr<Account> m_account;
-    QScrollArea * m_scrollArea;
+    ChartContainer * m_chart;
     QWidget * m_transactionContainer;
     QMenu * m_menu;
     TransactionDialog * m_transactionDialog;
