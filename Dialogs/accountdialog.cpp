@@ -30,7 +30,7 @@ void AccountDialog::on_buttonBox_accepted()
 {
     if(ui.lineEdit->text().isEmpty()) return;
     std::shared_ptr<Account> ac = std::make_shared<Account>(Account(ui.lineEdit->text()));
-    ac->addTransaction({QDate::currentDate(),ui.startingMoneySpinBox->value(),"Starting Money"});
+    ac->addTransaction({QDateTime::currentDateTime(),ui.startingMoneySpinBox->value(),"Starting Money"});
     if(m_status)
         emit newAccount(ac);
     else

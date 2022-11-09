@@ -21,20 +21,16 @@ void TimeChart::setup(std::shared_ptr<Account> ac)
 
     for( unsigned int j = 0 ; j < ac->transactions(); j++){
         Transaction tempT = ac->getTransaction(j);
-        QDateTime time = QDateTime::currentDateTime();
-        time.setDate(tempT.m_time);
         accountValue += tempT.m_value;
-        timeSeries->append(time.toSecsSinceEpoch(),accountValue);
+        timeSeries->append(tempT.m_time.toSecsSinceEpoch(),accountValue);
 
     }
-
     addSeries(timeSeries);
-
-
     QDateTimeAxis *axisX = new QDateTimeAxis;
     axisX->setTickCount(10);
     axisX->setFormat("dd.MM.yyyy");
     axisX->setTitleText("Date");
+    axisX->setRange(ac->allTransactions().first().m_time,ac->allTransactions().last().m_time);
 
     addAxis(axisX, Qt::AlignBottom);
     timeSeries->attachAxis(axisX);

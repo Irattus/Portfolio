@@ -6,7 +6,7 @@
 
 struct Transaction
 {
-    QDate m_time;
+    QDateTime m_time;
     qreal m_value;
     QString m_description;
 };
