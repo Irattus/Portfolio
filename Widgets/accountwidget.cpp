@@ -4,13 +4,12 @@ AccountWidget::AccountWidget(QWidget *parent) :
     QGroupBox(parent),
     m_lazy(false)
 {
-    int a;
     setLayout(new QVBoxLayout(this));
     m_transactionContainer = new QWidget(this);
     m_chart = new ChartContainer(this);
     layout()->addWidget(m_chart);
     layout()->addWidget(m_transactionContainer);
-    m_transactionContainer->setLayout(new QVBoxLayout(this));
+    m_transactionContainer->setLayout(new QVBoxLayout(m_transactionContainer));
     m_transactionContainer->layout()->setSpacing(1);
 
 
