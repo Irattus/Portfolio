@@ -28,6 +28,8 @@ public:
 
     inline void reload()
     {
+      if(m_lazy)
+          return;
       setTitle(m_account->name()+": "+m_account->totalS());
       m_chart->reload();
       emit reloadChart();
@@ -36,6 +38,7 @@ public:
 private slots:
     void on_AccountWidget_customContextMenuRequested(const QPoint &pos);
 private:
+    bool m_lazy;
     std::shared_ptr<Account> m_account;
     ChartContainer * m_chart;
     QWidget * m_transactionContainer;

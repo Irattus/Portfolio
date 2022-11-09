@@ -1,8 +1,10 @@
 #include "accountwidget.h"
 
 AccountWidget::AccountWidget(QWidget *parent) :
-    QGroupBox(parent)
+    QGroupBox(parent),
+    m_lazy(false)
 {
+    int a;
     setLayout(new QVBoxLayout(this));
     m_transactionContainer = new QWidget(this);
     m_chart = new ChartContainer(this);
@@ -49,6 +51,8 @@ void AccountWidget::createTransactionWidget(Transaction const& tr)
     m_transactionContainer->layout()->addWidget(w);
     w->setValue(m_account,tr);
     w->setMenu(m_menu);
+    QAction * modifyAction = new QAction("Modify Action", w);
+    connect(modifyAction, &QAction::triggered,this,[this,tr](){m_transactionDialog->modifyTransaction(m_account,tr); });
     connect(w,&TransactionWidget::removeTransactionWidget,this,
     [this,w,tr]()
         {
@@ -64,9 +68,11 @@ void AccountWidget::createTransactionWidget(Transaction const& tr)
 void AccountWidget::setAccount(std::shared_ptr<Account> const& a)
 {
     m_account = a;
+    m_lazy = true;
     m_chart->setAccount(m_account);
     for(unsigned int i=0; i < m_account->transactions(); i++)
         createTransactionWidget(m_account->getTransaction(i));
+    m_lazy = false;
 }
 
 void AccountWidget::on_AccountWidget_customContextMenuRequested(const QPoint &pos)

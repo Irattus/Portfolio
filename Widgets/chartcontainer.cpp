@@ -33,7 +33,7 @@ void TimeChart::setup(std::shared_ptr<Account> ac)
 
     QDateTimeAxis *axisX = new QDateTimeAxis;
     axisX->setTickCount(10);
-    axisX->setFormat("yy.MM..dd");
+    axisX->setFormat("dd.MM.yyyy");
     axisX->setTitleText("Date");
 
     addAxis(axisX, Qt::AlignBottom);

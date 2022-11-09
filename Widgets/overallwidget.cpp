@@ -5,7 +5,6 @@
 OverallWidget::OverallWidget(QWidget *parent) :
     QScrollArea(parent)
 {
-    setLayout(new QVBoxLayout(this));
     setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
     setWidgetResizable( true );
     m_container = new QWidget (this);
