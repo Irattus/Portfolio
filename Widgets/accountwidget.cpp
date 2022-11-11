@@ -1,15 +1,20 @@
 #include "accountwidget.h"
+#include <QScrollArea>
 
 AccountWidget::AccountWidget(QWidget *parent) :
     QGroupBox(parent),
     m_lazy(false)
 {
     setLayout(new QVBoxLayout(this));
+    QScrollArea * scrollArea = new QScrollArea(this);
+    scrollArea->setMinimumHeight(200);
+    scrollArea->setWidgetResizable(true);
+    layout()->addWidget(scrollArea);
     m_transactionContainer = new QWidget(this);
+    scrollArea->setWidget(m_transactionContainer);
     m_chart = new ChartContainer(this);
     layout()->addWidget(m_chart);
-    layout()->addWidget(m_transactionContainer);
-    m_transactionContainer->setLayout(new QVBoxLayout(m_transactionContainer));
+    m_transactionContainer->setLayout(new QHBoxLayout(m_transactionContainer));
     m_transactionContainer->layout()->setSpacing(1);
 
 

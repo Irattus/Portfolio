@@ -23,7 +23,9 @@ public:
 private slots:
 private:
     QWidget * m_container;
-    ChartContainer * m_chartContainer;
+    ChartContainer * m_pieChart;
+    ChartContainer * m_timeChart;
+
 
     std::shared_ptr<Bank> m_bank;
 

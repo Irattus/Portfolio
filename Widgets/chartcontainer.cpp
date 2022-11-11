@@ -1,5 +1,5 @@
 #include "chartcontainer.h"
-
+#include <QRandomGenerator64>
 BaseChartContainer::BaseChartContainer(QWidget *parent)
     : QWidget{parent}
 {
@@ -18,16 +18,20 @@ void TimeChart::setup(std::shared_ptr<Account> ac)
     ac->OrderTransactions();
     double accountValue = 0;
     QLineSeries * timeSeries = new QLineSeries;
-
     for( unsigned int j = 0 ; j < ac->transactions(); j++){
-        Transaction tempT = ac->getTransaction(j);
-        accountValue += tempT.m_value;
-        timeSeries->append(tempT.m_time.toSecsSinceEpoch(),accountValue);
-
+        timeSeries->append(
+                    ac->getTransaction(j).m_time.toMSecsSinceEpoch()-1,
+                    accountValue);
+        timeSeries->append(
+                    ac->getTransaction(j).m_time.toMSecsSinceEpoch(),
+                    accountValue += ac->getTransaction(j).m_value);
     }
     addSeries(timeSeries);
+
+
+
     QDateTimeAxis *axisX = new QDateTimeAxis;
-    axisX->setTickCount(10);
+    axisX->setTickCount(5);
     axisX->setFormat("dd.MM.yyyy");
     axisX->setTitleText("Date");
     axisX->setRange(ac->allTransactions().first().m_time,ac->allTransactions().last().m_time);
@@ -40,6 +44,7 @@ void TimeChart::setup(std::shared_ptr<Account> ac)
 
     addAxis(axisY, Qt::AlignLeft);
     timeSeries->attachAxis(axisY);
+
 }
 
 
@@ -47,6 +52,7 @@ void PieChart::setup(QVector<std::shared_ptr<Account>> listAcc)
 {
     QPieSeries * pieSeries = new QPieSeries;
     for( unsigned int i=0; i < listAcc.size(); ++i )
+        if(listAcc[i]->total()>0)
          pieSeries->append(QString(listAcc[i]->name() + ": "+listAcc[i]->totalS()),listAcc[i]->total());
     addSeries(pieSeries);
 
@@ -66,6 +72,8 @@ void ChartContainer::reload(){
     if(m_account){
         m_chart = new TimeChart();
         m_chart->setup(m_account);
+
     }
+    m_chart->setTheme((QChart::ChartTheme)QRandomGenerator::global()->bounded(7));
     m_chartView->setChart(m_chart);
 }

@@ -11,6 +11,15 @@
 #include <QLineSeries>
 #include "Utilities/bank.h"
 
+enum ChartType{
+    CT_PIE = 0,
+    CT_TIME,
+    CT_BOX
+};
+
+template<ChartType> class Charts;
+
+
 class BaseChart : public QChart
 {
 public:
@@ -21,10 +30,11 @@ public:
     virtual void setup(QVector<std::shared_ptr<Account>>) = 0;
 };
 
-class TimeChart : public BaseChart
+
+template<> class Charts<CT_TIME> : public BaseChart
 {
 public:
-    TimeChart(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = Qt::WindowFlags()) : BaseChart(parent,wFlags)
+    Charts<CT_TIME>(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = Qt::WindowFlags()) : BaseChart(parent,wFlags)
     {
         legend()->hide();
     }
@@ -35,10 +45,11 @@ private:
 
 };
 
-class PieChart : public BaseChart
+
+template<> class Charts<CT_PIE> : public BaseChart
 {
 public:
-    PieChart(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = Qt::WindowFlags()) : BaseChart(parent,wFlags)
+    Charts<CT_PIE>(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = Qt::WindowFlags()) : BaseChart(parent,wFlags)
     {}
     void setup(QVector<std::shared_ptr<Account>> listAcc);
 private:
@@ -74,5 +85,9 @@ public:
 private:
     BaseChart * m_chart;
 };
+
+typedef Charts<CT_PIE> PieChart;
+typedef Charts<CT_TIME> TimeChart;
+typedef Charts<CT_BOX> BoxChart;
 
 #endif // CHARTCONTAINER_H

@@ -20,18 +20,23 @@ OverallWidget::OverallWidget(QWidget *parent) :
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this,&OverallWidget::customContextMenuRequested,this,[this](QPoint const& pos){m_menu->exec(mapToGlobal(pos)); });
 
-    m_chartContainer = new ChartContainer(m_container);
-    m_container->layout()->addWidget(m_chartContainer);
+    m_pieChart = new ChartContainer(m_container);
+    m_container->layout()->addWidget(m_pieChart);
+    m_timeChart = new ChartContainer(m_container);
+    m_container->layout()->addWidget(m_timeChart);
 
 }
 
-
 void OverallWidget::setBank(std::shared_ptr<Bank> bank)
 {
-    m_bank = m_chartContainer->setBank(bank);
-    for(unsigned int i=0; i<m_bank->accounts();i++)
-        createAccount(m_bank->getAccount(i));
 
+    m_bank = m_pieChart->setBank(bank);
+    Account ac;
+    for(unsigned int i=0; i<m_bank->accounts();i++){
+        createAccount(m_bank->getAccount(i));
+        ac.appendTransaction(m_bank->getAccount(i)->allTransactions());
+    }
+    m_timeChart->setAccount(std::make_shared<Account>(ac));
 }
 
 void OverallWidget::addAccount(std::shared_ptr<Account> const& ac)
@@ -62,7 +67,7 @@ void OverallWidget::createAccount(std::shared_ptr<Account> const& ac)
     [this,accountWidget,ac]()
         {
             m_bank->removeAccount(ac);
-            layout()->removeWidget(accountWidget);
+            m_container->layout()->removeWidget(accountWidget);
             accountWidget->deleteLater();
         }
     );
@@ -75,7 +80,14 @@ void OverallWidget::createAccount(std::shared_ptr<Account> const& ac)
     accountWidget->setAccount( ac );
     accountWidget->reload();
 
-    connect(accountWidget,&AccountWidget::reloadChart,m_chartContainer,&ChartContainer::reload);
+    connect(accountWidget,&AccountWidget::reloadChart,m_pieChart,&ChartContainer::reload);
+    connect(accountWidget,&AccountWidget::reloadChart,this,[this]()
+    {
+        Account ac;
+        for(unsigned int i=0; i<m_bank->accounts();i++)
+            ac.appendTransaction(m_bank->getAccount(i)->allTransactions());
+        m_timeChart->setAccount(std::make_shared<Account>(ac));
+    });
 
 }
 

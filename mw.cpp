@@ -7,7 +7,7 @@ MW::MW(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
-    setWindowTitle("Portfolio");
+    setWindowTitle("Your Money");
     ui.yourMoney->setBank(m_bank = load());
 
 }
