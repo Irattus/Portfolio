@@ -1,6 +1,5 @@
 #ifndef ACCOUNTDIALOG_H
 #define ACCOUNTDIALOG_H
-
 #include "ui_accountdialog.h"
 #include "Utilities/account.h"
 

@@ -6,9 +6,14 @@
 MW::MW(QWidget *parent)
     : QMainWindow(parent)
 {
-    ui.setupUi(this);
     setWindowTitle("Your Money");
-    ui.yourMoney->setBank(m_bank = load());
+    m_overAllWidget= new OverallWidget(this);
+    setCentralWidget(m_overAllWidget);
+    m_overAllWidget->setBank(m_bank = load());
+    setMinimumSize(QSize(600,400));
+
+
+
 
 }
 

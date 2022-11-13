@@ -32,7 +32,6 @@ HEADERS += \
 
 FORMS += \
     Dialogs/accountdialog.ui \
-    mw.ui \
     Dialogs/transactiondialog.ui
 
 # Default rules for deployment.

@@ -30,6 +30,8 @@ void TimeChart::setup(std::shared_ptr<Account> ac)
 
 
 
+    if(!timeSeries->count())
+        return;
     QDateTimeAxis *axisX = new QDateTimeAxis;
     axisX->setTickCount(5);
     axisX->setFormat("dd.MM.yyyy");
@@ -63,6 +65,23 @@ void PieChart::setup(QVector<std::shared_ptr<Account>> listAcc)
     slice->setLabelVisible();
 
 }
+
+std::shared_ptr<Bank> ChartContainer::setBank(std::shared_ptr<Bank> bank)
+{
+    m_bank = bank;
+    if(m_bank->accounts())
+        reload();
+    return m_bank;
+}
+
+std::shared_ptr<Account> ChartContainer::setAccount(std::shared_ptr<Account> account)
+{
+    m_account = account;
+    if(m_account->transactions())
+        reload();
+    return m_account;
+}
+
 
 void ChartContainer::reload(){
     if(m_bank){

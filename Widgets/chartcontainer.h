@@ -77,9 +77,8 @@ class ChartContainer : public BaseChartContainer
 {
 public:
     explicit ChartContainer(QWidget *parent = nullptr) : BaseChartContainer(parent)  {}
-    inline std::shared_ptr<Bank> setBank(std::shared_ptr<Bank> bank) { m_bank = bank; reload(); return m_bank; }
-    inline std::shared_ptr<Account> setAccount(std::shared_ptr<Account> account)
-    { m_account = account; reload(); return m_account; }
+    std::shared_ptr<Bank> setBank(std::shared_ptr<Bank> bank);
+    std::shared_ptr<Account> setAccount(std::shared_ptr<Account> account);
 
     void reload();
 private:
